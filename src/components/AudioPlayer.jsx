@@ -8,15 +8,15 @@ export default function AudioPlayer () {
 
 
     //For visualizer
-    const [blob, setBlob] = useState<Blob | null>(null);
-    const audioRef = useRef<HTMLAudioElement>(null);
-    const visualizerRef = useRef<HTMLCanvasElement>(null);
+    const [blob, setBlob] = useState(null);
+    const audioRef = useRef(null);
+    const visualizerRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(1);
 
 
     useEffect(() => {
-        fetch("https://file-examples.com/storage/fe1734aff46541d35a76822/2017/11/file_example_MP3_1MG.mp3").then((audioBlob: any) => {
+        fetch("https://file-examples.com/storage/fe1734aff46541d35a76822/2017/11/file_example_MP3_1MG.mp3").then((audioBlob) => {
             setBlob(audioBlob);
         }).catch(err => console.error(err))
     }, []);
@@ -33,7 +33,7 @@ export default function AudioPlayer () {
         }
     }
 
-    const handleVolumeChange = (value: any) => {
+    const handleVolumeChange = (value) => {
         if (audioRef.current) {
             audioRef.current.volume = value;
             setVolume(value);

@@ -1,6 +1,5 @@
-"use client";
+
 import React, { useState } from 'react';
-import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { CaretDownIcon } from '@radix-ui/react-icons';
 
 export default function NavBar() {
