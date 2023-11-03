@@ -12,7 +12,7 @@ export default async function useApi({
 }) {
   const [data, setData] = useState(null);
 
-  const request = async () => {
+  async function request() {
     try {
       const response = await axios[method](
         ServerURL + url,

@@ -6,7 +6,7 @@ import UserContext from "../contexts/UserContext";
 export default function useAuth(username = null, password = null) {
   const [user, setUser] = useState(UserContext.user || null);
 
-  const login = async (username, password) => {
+  const login = async () => {
     try {
       const response = await axios.post(ServerURL + "/log-in", {
         username,

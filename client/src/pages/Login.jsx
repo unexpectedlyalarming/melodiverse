@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Container from '../components/Container'
 import useAuth from '../hooks/useAuth'
-
+import { Link } from 'react-router-dom';
 export default function Login() {
 
     const [ username, setUsername ] = useState("");
@@ -20,6 +20,8 @@ export default function Login() {
                 <input type="password" name="password" onChange={(e) => setPassword(e.target.value)} />
                 <button >Login</button>
                 </form>
+                <Link to="/register">Register</Link>
+
         </Container>
     )
 }

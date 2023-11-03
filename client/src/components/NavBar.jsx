@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { CaretDownIcon } from '@radix-ui/react-icons';
+import { Link } from 'react-router-dom';
 
 export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,10 +23,10 @@ export default function NavBar() {
       </div>
 
       <div className={`lg:flex lg:space-x-4 mt-4 ${menuOpen ? 'block' : 'hidden'} lg:items-center lg:justify-center`}>
-        <a href="#" className="block lg:inline-block p-2">Home</a>
-        <a href="#" className="block lg:inline-block p-2">Samples</a>
-        <a href="#" className="block lg:inline-block p-2">Groups</a>
-        <a href="#" className="block lg:inline-block p-2">About</a>
+        <Link to="/" className="block lg:inline-block p-2">Home</Link>
+        <Link to="/samples" className="block lg:inline-block p-2">Samples</Link>
+        <Link to="/groups" className="block lg:inline-block p-2">Groups</Link>
+        <Link to="/about" className="block lg:inline-block p-2">About</Link>
       </div>
     </div>
   );

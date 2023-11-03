@@ -6,6 +6,9 @@ import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Samples from './pages/Samples';
+import Groups from './pages/Groups';
+import About from './pages/About';
 
 
 
@@ -51,15 +54,29 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: "/login",
-                element: <Login />,
+                path: "/samples",
+                element: <Samples />,
             },
             {
-                path: "/register",
-                element: <Register />,
+                path: "/groups",
+                element: <Groups />,
             },
+            {
+                path: "/about",
+                element: <About />,
+            }
+
         ],
-    }]);
+    },
+        {
+            path: "/login",
+            element: <Login />,
+        },
+        {
+            path: "/register",
+            element: <Register />,
+        },
+    ]);
 
     if (loading) {
         return <div>Loading...</div>;

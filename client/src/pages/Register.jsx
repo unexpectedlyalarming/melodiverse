@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Container from '../components/Container';
 import useApi from '../hooks/useApi';
+import { Link } from 'react-router-dom';
 
 export default function Register() {
     const [username, setUsername] = useState("");
@@ -41,6 +42,8 @@ export default function Register() {
                 <button>Register</button>
                 <p>{message ? message : null}</p>
             </form>
+            <Link to="/login">Login</Link>
+
         </Container>
     )
 }
