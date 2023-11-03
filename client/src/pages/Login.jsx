@@ -13,12 +13,12 @@ export default function Login() {
     return (
         <Container>
             <h2>Login</h2>
-            <form>
+            <form onSubmit={(e) => { e.preventDefault; login;}}>
                 <label htmlFor="username">Username</label>
                 <input type="text" name="username" onChange={(e) => setUsername(e.target.value)}/>
                 <label htmlFor="password">Password</label>
                 <input type="password" name="password" onChange={(e) => setPassword(e.target.value)} />
-                <button onClick={login}>Login</button>
+                <button >Login</button>
                 </form>
         </Container>
     )
