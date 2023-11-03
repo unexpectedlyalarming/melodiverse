@@ -9,16 +9,18 @@ import Home from './pages/Home';
 
 
 function Router() {
-    const { user, setUser, loading } = useSession();
-    useEffect(() => {
-        if (user) {
-            setUser(user);
+    // const { user, setUser, loading } = useSession();
+    // useEffect(() => {
+    //     if (user) {
+    //         setUser(user);
             
-        } else {
-            setUser(null);
-        }
+    //     } else {
+    //         setUser(null);
+    //     }
 
-    }, [user, setUser]);
+    // }, [user, setUser]);
+    const [user, setUser] = useState("full");
+    const loading = false;
 
     const Layout = () => {
         return (

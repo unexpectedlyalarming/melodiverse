@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
+import UserContext from "../contexts/UserContext";
 
-export default function useAuth(userContext) {
-  const [user, setUser] = useState(null);
+export default function useAuth(username = null, password = null) {
+  const [user, setUser] = useState(UserContext.user || null);
 
   const login = async (username, password) => {
     try {
@@ -13,7 +14,7 @@ export default function useAuth(userContext) {
       });
       if (response.data) {
         setUser(response.data);
-        userContext.setUser(response.data);
+        UserContext.setUser(response.data);
       } else {
         throw new Error("Login failed");
       }
@@ -26,7 +27,7 @@ export default function useAuth(userContext) {
     try {
       await axios.post(ServerURL + "/log-out");
       setUser(null);
-      userContext.setUser(null);
+      UserContext.setUser(null);
     } catch (err) {
       console.error(err);
     }
