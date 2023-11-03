@@ -1,21 +1,15 @@
-import AudioPlayer from '../components/AudioPlayer'
-import Container from '../components/Container'
-import React from 'react'
-import '../index.css'
-
-
-
+import AudioPlayer from "../components/AudioPlayer";
+import Container from "../components/Container";
+import React from "react";
+import "../index.css";
+import Feed from "./Modular/Feed";
 
 export default function Home() {
-
-
   return (
     <>
-    <Container>
-    <h2>Page</h2>
-    <AudioPlayer />
+      <Container>
+        <Feed />
       </Container>
-      
     </>
-  )
+  );
 }
