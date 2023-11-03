@@ -20,17 +20,17 @@ export default function useAuth(userContext) {
     } catch (err) {
       console.error(err);
     }
-
-    const logout = async () => {
-      try {
-        await axios.post(ServerURL + "/log-out");
-        setUser(null);
-        userContext.setUser(null);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    return { user, login, logout };
   };
+
+  const logout = async () => {
+    try {
+      await axios.post(ServerURL + "/log-out");
+      setUser(null);
+      userContext.setUser(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return { user, login, logout };
 }
