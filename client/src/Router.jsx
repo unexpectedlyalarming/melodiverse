@@ -9,6 +9,8 @@ import Register from './pages/Register';
 import Samples from './pages/Samples';
 import Groups from './pages/Groups';
 import About from './pages/About';
+import Sample from './pages/Modular/Sample';
+import Profile from './pages/Modular/Profile';
 
 
 
@@ -64,7 +66,16 @@ const router = createBrowserRouter([
             {
                 path: "/about",
                 element: <About />,
-            }
+            },
+            {
+                path: "/sample/:id",
+                element: <Sample />,
+            },
+            {
+                path: "/profile/:id",
+                element: <Profile />,
+            },
+            
 
         ],
     },

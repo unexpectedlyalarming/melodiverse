@@ -16,7 +16,7 @@ export default function Register() {
             username,
             password,
         }
-    })
+    });
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -29,6 +29,7 @@ export default function Register() {
             setMessage(data.message);
         }
     }
+    
     return (
         <Container>
             <h2>Register</h2>
