@@ -3,12 +3,12 @@ import axios from "axios";
 import ServerURL from "../variables/URLs";
 import UserContext from "../contexts/UserContext";
 
-export default function useAuth(username = null, password = null) {
+export default function useAuth() {
   const [user, setUser] = useState(UserContext.user || null);
 
-  const login = async () => {
+  const login = async (username, password) => {
     try {
-      const response = await axios.post(ServerURL + "/log-in", {
+      const response = await axios.post(ServerURL + "/auth/log-in", {
         username,
         password,
       });
@@ -25,7 +25,7 @@ export default function useAuth(username = null, password = null) {
 
   const logout = async () => {
     try {
-      await axios.post(ServerURL + "/log-out");
+      await axios.post(ServerURL + "/auth/log-out");
       setUser(null);
       UserContext.setUser(null);
     } catch (err) {

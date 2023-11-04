@@ -7,14 +7,10 @@ import { Response, NextFunction } from "express";
 import ReturnedUser from "../interfaces/ReturnedUser";
 import Request from "../interfaces/Request";
 
-
 interface TokenResult {
   token: string;
   user: ReturnedUser;
 }
-
-
-
 
 function giveToken(user: ReturnedUser): TokenResult {
   //return only username, avatar, and bio
@@ -28,51 +24,62 @@ function giveToken(user: ReturnedUser): TokenResult {
   return { token, user: newUser };
 }
 
-router.post("/register", validateFormInput, async (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
-    const existingUser = await User.findOne({ username: username });
-    if (existingUser) {
-      res.status(400).json({ message: "Username already exists" });
-    }
-    const hash = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      username,
-      hash,
-    });
-    await newUser.save();
+router.post(
+  "/register",
+  validateFormInput,
+  async (req: Request, res: Response) => {
+    try {
+      const { username, password } = req.body;
+      const existingUser = await User.findOne({ username: username });
+      if (existingUser) {
+        res.status(400).json({ message: "Username already exists" });
+      }
+      const hash = await bcrypt.hash(password, 10);
+      const newUser = new User({
+        username,
+        password: hash,
+      });
+      await newUser.save();
 
-    res.status(200).json({ message: "User created" });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+      res.status(200).json({ message: "User created" });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
   }
-});
+);
 
-router.post("/log-in", validateFormInput, async (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
+router.post(
+  "/log-in",
+  validateFormInput,
+  async (req: Request, res: Response) => {
+    try {
+      const { username, password } = req.body;
 
-    const existingUser = await User.findOne({ username: username });
+      const existingUser = await User.findOne({ username: username });
 
-    if (!existingUser) {
-      res.status(400).json({ message: "Username does not exist" });
+      if (!existingUser) {
+        res.status(400).json({ message: "Username does not exist" });
+      }
+      const validPassword = await bcrypt.compare(
+        password,
+        existingUser.password
+      );
+      if (!validPassword) {
+        res.status(400).json({ message: "Invalid password" });
+      }
+      const { token, user } = giveToken(existingUser);
+      //set cookie
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60, //1 hour
+      });
+      req.user = user;
+      res.status(200).json({ user });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
-    const validPassword = await bcrypt.compare(password, existingUser.password);
-    if (!validPassword) {
-      res.status(400).json({ message: "Invalid password" });
-    }
-    const { token, user } = giveToken(existingUser);
-    //set cookie
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60, //1 hour
-    });
-    req.user = user;
-    res.status(200).json({ user });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
   }
-});
+);
 
 router.get("/log-out", async (req: Request, res: Response) => {
   try {

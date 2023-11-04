@@ -4,9 +4,9 @@ import ServerURL from "../variables/URLs";
 
 //By default, this hook will use GET
 
-export default async function useApi({
+export default function useApi({
   url,
-  options = {},
+  options = { withCredentials: true },
   method = "GET",
   body = null,
 }) {
@@ -29,7 +29,7 @@ export default async function useApi({
     } catch (err) {
       setData(err);
     }
-  };
+  }
 
   return { data, request };
 }
