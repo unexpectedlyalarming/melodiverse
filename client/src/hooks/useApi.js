@@ -10,6 +10,7 @@ export default function useApi({
   method = "GET",
   body = null,
 }) {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
   async function request() {
@@ -26,10 +27,11 @@ export default function useApi({
         const error = new Error(response.data);
         setData(error);
       }
+      setLoading(false);
     } catch (err) {
       setData(err);
     }
   }
 
-  return { data, request };
+  return { data, request, loading };
 }

@@ -100,4 +100,4 @@ router.patch("/:id", upload.single("avatar"), async (req: Request, res: Response
 
 //Delete user
 
-export default router;
+module.exports = router;

@@ -57,3 +57,5 @@ router.post("/:itemId", async (req: any, res: any) => {
         res.status(500).json({ message: err });
     }
 });
+
+module.exports = router;

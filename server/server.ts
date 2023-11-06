@@ -73,7 +73,6 @@ app.use(
     cookie: { sameSite: "none", secure: true },
   })  );
 
-  //start session
 
 
 //Secure with helmet
@@ -98,6 +97,25 @@ app.use("/auth", authRoute);
 
 const verifyToken = require("./utilities/verifyToken");
 
+app.use(verifyToken);
+
+const usersRoute = require("./routes/user-routes/users");
+
+app.use("/users", usersRoute);
+
+const genresRoute = require("./routes/genres");
+
+app.use("/genres", genresRoute);
+
+const samplesRoute = require("./routes/sample-routes/samples");
+
+app.use("/samples", samplesRoute);
+
+
+
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`);
 });
+
+
+module.exports = app;

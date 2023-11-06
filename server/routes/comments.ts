@@ -2,7 +2,7 @@ import express from 'express';
 import { Response, NextFunction } from "express";
 import Request from "../interfaces/Request";
 const router = express.Router();
-import checkModStatus from '../utilities/modUtils';
+
 const Comment = require("../models/comment");
 
 
