@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
 import UserContext from "../contexts/UserContext";
 
 export default function useAuth() {
-  const [user, setUser] = useState(UserContext.user || null);
-
+  const { setUser } = useContext(UserContext);
   const login = async (username, password) => {
     try {
       const response = await axios.post(ServerURL + "/auth/log-in", {
@@ -14,7 +13,6 @@ export default function useAuth() {
       });
       if (response.data) {
         setUser(response.data);
-        UserContext.setUser(response.data);
       } else {
         throw new Error("Login failed");
       }
@@ -27,11 +25,10 @@ export default function useAuth() {
     try {
       await axios.post(ServerURL + "/auth/log-out");
       setUser(null);
-      UserContext.setUser(null);
     } catch (err) {
       console.error(err);
     }
   };
 
-  return { user, login, logout };
+  return { login, logout };
 }

@@ -90,6 +90,27 @@ router.get("/log-out", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/validate-session", async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).json({ message: "No token, authorization denied" });
+    }
+    const verified = jwt.verify(token, process.env.JWT_SECRET) as ReturnedUser;
+    if (!verified) {
+      return res.status(401).json({ message: "Token verification failed" });
+    }
+    const user = await User.findById(verified._id);
+    if (!user) {
+      return res.status(401).json({ message: "User does not exist" });
+    }
+    req.user = user;
+    res.status(200).json({ user });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 //Ensure form input is valid
 
 function validateFormInput(req: Request, res: Response, next: NextFunction) {

@@ -16,18 +16,18 @@ import Profile from './pages/Modular/Profile';
 
 
 function Router() {
-    // const { user, setUser, loading } = useSession();
-    // useEffect(() => {
-    //     if (user) {
-    //         setUser(user);
+    const { user, setUser, loading } = useSession();
+    useEffect(() => {
+        if (user) {
+            setUser(user);
             
-    //     } else {
-    //         setUser(null);
-    //     }
+        } else {
+            setUser(null);
+        }
 
-    // }, [user, setUser]);
-    const [user, setUser] = useState("full");
-    const loading = false;
+    }, [user, setUser]);
+    // const [user, setUser] = useState("full");
+    // const loading = false;
 
     const Layout = () => {
         return (
