@@ -7,10 +7,14 @@ export default function useAuth() {
   const { setUser } = useContext(UserContext);
   const login = async (username, password) => {
     try {
-      const response = await axios.post(ServerURL + "/auth/log-in", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        ServerURL + "/auth/log-in",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      );
       if (response.data) {
         setUser(response.data);
       } else {

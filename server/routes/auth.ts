@@ -12,16 +12,16 @@ interface TokenResult {
   user: ReturnedUser;
 }
 
-function giveToken(user: ReturnedUser): TokenResult {
+function giveToken(newUser: ReturnedUser): TokenResult {
   //return only username, avatar, and bio
-  const newUser: ReturnedUser = {
-    username: user.username,
-    avatar: user.avatar,
-    bio: user.bio,
-    _id: user._id,
+  const user: ReturnedUser = {
+    username: newUser.username,
+    avatar: newUser.avatar,
+    bio: newUser.bio,
+    _id: newUser._id,
   };
-  const token = jwt.sign({ newUser }, process.env.JWT_SECRET) as string;
-  return { token, user: newUser };
+  const token = jwt.sign(user, process.env.JWT_SECRET) as string;
+  return { token, user: user };
 }
 
 router.post(
@@ -72,6 +72,7 @@ router.post(
       res.cookie("accessToken", token, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60, //1 hour
+
       });
       req.user = user;
       res.status(200).json({ user });
@@ -92,7 +93,7 @@ router.get("/log-out", async (req: Request, res: Response) => {
 
 router.get("/validate-session", async (req: Request, res: Response) => {
   try {
-    const token = req.cookies.accessToken;
+    const token = req.cookies?.accessToken;
     if (!token) {
       return res.status(401).json({ message: "No token, authorization denied" });
     }
@@ -100,12 +101,18 @@ router.get("/validate-session", async (req: Request, res: Response) => {
     if (!verified) {
       return res.status(401).json({ message: "Token verification failed" });
     }
-    const user = await User.findById(verified._id);
-    if (!user) {
+    const newUser = await User.findById(verified._id);
+    if (!newUser) {
       return res.status(401).json({ message: "User does not exist" });
     }
-    req.user = user;
-    res.status(200).json({ user });
+    const user: ReturnedUser = {
+      username: newUser.username,
+      avatar: newUser.avatar,
+      bio: newUser.bio,
+      _id: newUser._id,
+    };
+    req.user = user
+    res.status(200).json( user );
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

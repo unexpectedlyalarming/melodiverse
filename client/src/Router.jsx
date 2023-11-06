@@ -14,15 +14,17 @@ import Profile from './pages/Modular/Profile';
 
 
 
-
 function Router() {
     const { user, setUser, loading } = useSession();
     useEffect(() => {
         if (user) {
             setUser(user);
+
             
         } else {
             setUser(null);
+
+
         }
 
     }, [user, setUser]);
@@ -75,6 +77,7 @@ const router = createBrowserRouter([
                 path: "/profile/:id",
                 element: <Profile />,
             },
+            //Sample packs, messages, alerts
             
 
         ],

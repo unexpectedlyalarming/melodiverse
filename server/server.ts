@@ -6,8 +6,12 @@ import PrettyError from "pretty-error";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import session from "express-session";
 
 dotenv.config();
+
+
 
 // Global variables
 
@@ -20,6 +24,8 @@ const dbName: string = process.env.DB_NAME || "melodiversedb";
 
 const dbUser: any = process.env.DB_USER || null;
 const dbPass: any = process.env.DB_PASS || null;
+
+const sessionSecret: any = process.env.SESSION_SECRET || "secret";
 
 const dbUri = dbUser
   ? `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`
@@ -34,7 +40,6 @@ mongoose.connect(dbUri, {
 
 app.use(morgan("dev"));
 
-//Set up cors
 
 //set headers
 
@@ -53,6 +58,23 @@ app.use(
     accessControlAllowCredentials: true,
   } as cors.CorsOptions)
 );
+
+//Set up cookie parser
+
+app.use(cookieParser());
+
+//Set up express session
+
+app.use(
+  session({
+    secret: sessionSecret,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { sameSite: "none", secure: true },
+  })  );
+
+  //start session
+
 
 //Secure with helmet
 
