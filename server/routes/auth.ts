@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const Moderator = require("../models/Moderator");
 import { Response, NextFunction } from "express";
 import ReturnedUser from "../interfaces/ReturnedUser";
 import Request from "../interfaces/Request";
@@ -10,20 +11,35 @@ import Request from "../interfaces/Request";
 const jwtKey = process.env.JWT_SECRET || "secret";
 
 interface TokenResult {
-  token: string;
-  user: ReturnedUser;
+  token?: string;
+  user?: ReturnedUser;
 }
 
-function giveToken(newUser: ReturnedUser): TokenResult {
-  //return only username, avatar, and bio
-  const user: ReturnedUser = {
-    username: newUser.username,
-    avatar: newUser.avatar,
-    bio: newUser.bio,
-    _id: newUser._id,
-  };
-  const token = jwt.sign(user, jwtKey) as string;
-  return { token, user: user };
+async function giveToken(newUser: ReturnedUser): Promise<TokenResult> {
+  try {
+
+    //return only username, avatar, and bio
+    //Check for moderator
+    const mod = await Moderator.findOne({ userId: newUser._id });
+    
+    if (mod) {
+      newUser.moderator = true;
+    } else {
+      newUser.moderator = false;
+    }
+    
+    const user: ReturnedUser = {
+      username: newUser.username,
+      avatar: newUser.avatar,
+      bio: newUser.bio,
+      _id: newUser._id,
+      moderator: newUser.moderator,
+    };
+    const token = jwt.sign(user, jwtKey) as string;
+    return { token, user: user };
+  } catch (err: any) {
+    return {};
+}
 }
 
 router.post(
@@ -69,7 +85,10 @@ router.post(
       if (!validPassword) {
         res.status(400).json({ message: "Invalid password" });
       }
-      const { token, user } = giveToken(existingUser);
+      const { token, user } = await giveToken(existingUser);
+      if (!token || !user) {
+        res.status(500).json({ message: "Token generation failed" });
+      }
       //set cookie
       res.cookie("accessToken", token, {
         httpOnly: true,

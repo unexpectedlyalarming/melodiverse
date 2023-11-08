@@ -51,6 +51,9 @@ router.post("/", checkModStatus, upload.single("cover"), async (req: Request, re
         if (!req.file) {
             return res.status(400).json({ message: "No cover image provided" });
         }
+        if (!req.moderator) {
+            return res.status(403).json({ message: "You are not authorized to perform this action" });
+        }
 
         const coverImage = `${process.env.SERVER_URL}/public/samples/${req.file?.originalname}`
         const genre = new Genre({

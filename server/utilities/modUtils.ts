@@ -8,7 +8,7 @@ async function checkModStatus (req: Request, res: Response, next: NextFunction) 
         const moderator = await Moderator.findOne({ userId });
         req.moderator = false;
         if (moderator) req.moderator = true;
-        if (!moderator) return res.status(400).send("User is not a moderator.");
+        if (!moderator) req.moderator = false;
         next();
 
     } catch (err: any) {
