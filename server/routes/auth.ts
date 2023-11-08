@@ -15,6 +15,7 @@ interface TokenResult {
   user?: ReturnedUser;
 }
 
+
 async function giveToken(newUser: ReturnedUser): Promise<TokenResult> {
   try {
 
@@ -103,7 +104,7 @@ router.post(
   }
 );
 
-router.get("/log-out", async (req: Request, res: Response) => {
+router.get("/logout", async (req: Request, res: Response) => {
   try {
     res.cookie("accessToken", "", { maxAge: 5, httpOnly: true });
     res.status(200).json({ message: "Logged out" });
@@ -126,14 +127,23 @@ router.get("/validate-session", async (req: Request, res: Response) => {
     if (!newUser) {
       return res.status(401).json({ message: "User does not exist" });
     }
+    const mod = await Moderator.findOne({ userId: newUser._id });
+    
+    if (mod) {
+      newUser.moderator = true;
+    } else {
+      newUser.moderator = false;
+    }
+
     const user: ReturnedUser = {
       username: newUser.username,
       avatar: newUser.avatar,
       bio: newUser.bio,
       _id: newUser._id,
+      moderator: newUser.moderator,
     };
     req.user = user
-    res.status(200).json( user );
+    res.status(200).json( {user} );
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

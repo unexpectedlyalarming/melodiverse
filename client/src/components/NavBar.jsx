@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
-import userContext from "../contexts/userContext";
+import UserContext from "../contexts/UserContext";
+import useAuth from "../hooks/useAuth";
 
-export default function NavBar() {
+export default function NavBar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useContext(userContext);
+  const { logout } = useAuth();
+  console.log(user);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -14,14 +16,20 @@ export default function NavBar() {
   const modOptions = (
     <>
       <li className="p-2 hover:bg-gray-800">
-        <Link to="/mod/genres/create">Create Genre</Link>
-      </li>
-      <li className="p-2 hover:bg-gray-800">
-        <Link to="/mod/genres">Edit Genres</Link>
+        <Link to="/dashboard">Dashboard</Link>
       </li>
     </>
   );
-
+  const userOptions = (
+    <>
+      <li className="p-2 hover:bg-gray-800">
+        <Link to="/user">Profile</Link>
+      </li>
+      <li className="p-2 hover:bg-gray-800">
+        <button onClick={logout}>Logout</button>
+      </li>
+    </>
+  );
   return (
     <div className="bg-black text-white">
       <div className="flex justify-between items-center">
@@ -58,6 +66,7 @@ export default function NavBar() {
             About
           </Link>
         </li>
+        {user ? userOptions : null}
         {user?.moderator ? modOptions : null}
       </ul>
     </div>

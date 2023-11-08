@@ -35,7 +35,7 @@ export default function useAuth() {
 
   const logout = async () => {
     try {
-      await axios.post(ServerURL + "/auth/log-out");
+      await axios.get(ServerURL + "/auth/logout");
       setUser(null);
     } catch (err) {
       console.error(err);

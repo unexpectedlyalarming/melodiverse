@@ -9,23 +9,21 @@ export default function useSession() {
   useEffect(() => {
     async function fetchSession() {
       try {
-        const data = await axios.get(ServerURL + "/auth/validate-session", {
+        const response = await axios.get(ServerURL + "/auth/validate-session", {
           withCredentials: true,
         });
 
-        if (data instanceof Error) {
+        if (response instanceof Error) {
           setUser(null);
-          setLoading(false);
         }
-        if (data) {
-          setUser(data);
-          setLoading(false);
+        if (response.data) {
+          setUser(response.data.user);
         } else {
           setUser(null);
-          setLoading(false);
         }
       } catch (err) {
         setUser(null);
+      } finally {
         setLoading(false);
       }
     }
