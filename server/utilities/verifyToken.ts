@@ -3,12 +3,16 @@ import { Request, Response, NextFunction } from "express";
 import ReturnedUser from "../interfaces/ReturnedUser";
 const jwtKey: string = process.env.JWT_SECRET || "secret";
 
+
+
 interface CustomRequest extends Request {
   user: ReturnedUser;
 }
 
 function verifyToken(req: CustomRequest, res: Response, next: NextFunction) {
-  const token = req.cookies.accessToken; // Assuming you store the token in a cookie
+  const token = req.cookies?.accessToken;
+
+
   if (!token) {
     return res.status(401).json({ message: "Token is missing" });
   }
@@ -18,8 +22,9 @@ function verifyToken(req: CustomRequest, res: Response, next: NextFunction) {
       return res.status(401).json({ message: "Invalid token" });
     }
 
+
     // Assuming that your JWT payload structure includes 'user' with 'id' property
-    if (!decoded.user || !decoded.user.id) {
+    if (!decoded._id) {
       return res.status(401).json({ message: "Invalid token payload" });
     }
 

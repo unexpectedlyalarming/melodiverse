@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import session from "express-session";
+
 
 dotenv.config();
 
@@ -63,16 +63,6 @@ app.use(
 
 app.use(cookieParser());
 
-//Set up express session
-
-app.use(
-  session({
-    secret: sessionSecret,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { sameSite: "none", secure: true },
-  })  );
-
 
 
 //Secure with helmet
@@ -97,19 +87,18 @@ app.use("/auth", authRoute);
 
 const verifyToken = require("./utilities/verifyToken");
 
-app.use(verifyToken);
 
 const usersRoute = require("./routes/user-routes/users");
 
-app.use("/users", usersRoute);
+app.use("/users", verifyToken, usersRoute);
 
 const genresRoute = require("./routes/genres");
 
-app.use("/genres", genresRoute);
+app.use("/genres", verifyToken, genresRoute);
 
 const samplesRoute = require("./routes/sample-routes/samples");
 
-app.use("/samples", samplesRoute);
+app.use("/samples", verifyToken, samplesRoute);
 
 
 

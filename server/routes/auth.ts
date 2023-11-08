@@ -7,6 +7,8 @@ import { Response, NextFunction } from "express";
 import ReturnedUser from "../interfaces/ReturnedUser";
 import Request from "../interfaces/Request";
 
+const jwtKey = process.env.JWT_SECRET || "secret";
+
 interface TokenResult {
   token: string;
   user: ReturnedUser;
@@ -20,7 +22,7 @@ function giveToken(newUser: ReturnedUser): TokenResult {
     bio: newUser.bio,
     _id: newUser._id,
   };
-  const token = jwt.sign(user, process.env.JWT_SECRET) as string;
+  const token = jwt.sign(user, jwtKey) as string;
   return { token, user: user };
 }
 

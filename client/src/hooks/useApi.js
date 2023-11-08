@@ -4,9 +4,11 @@ import ServerURL from "../variables/URLs";
 
 //By default, this hook will use GET
 
+axios.defaults.withCredentials = true;
+
 export default function useApi({
   url,
-  options = { withCredentials: true },
+  options = {},
   method = "GET",
   body = null,
 }) {
@@ -15,12 +17,10 @@ export default function useApi({
 
   async function request() {
     try {
-      const response = await axios[method](
-        ServerURL + url,
-        body,
-        { withCredentials: true },
-        options
-      );
+      const response = await axios[method](ServerURL + url, body, {
+        withCredentials: true,
+        ...options,
+      });
       if (response.data) {
         setData(response.data);
       } else {
