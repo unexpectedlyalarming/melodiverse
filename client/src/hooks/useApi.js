@@ -9,13 +9,13 @@ axios.defaults.withCredentials = true;
 export default function useApi({
   url,
   options = {},
-  method = "GET",
+  method = "get",
   body = null,
 }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  async function request(optionalData) {
+  async function request(optionalData = null) {
     try {
       const response = await axios[method](
         ServerURL + url,

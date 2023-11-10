@@ -9,11 +9,16 @@ const Download = require("../../models/Download");
 const View = require("../../models/View");
 import Request from "../../interfaces/Request";
 import addView from "../../utilities/viewUtils";
+import path from "path";
+import jwt from 'jsonwebtoken';
+import ReturnedUser from "../../interfaces/ReturnedUser";
 //Set up multer
+
+const jwtSecret = process.env.JWT_SECRET || "secret";
 
 const storage: StorageEngine = multer.diskStorage({
   destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
-    cb(null, "../../public/samples");
+    cb(null, path.join(__dirname, "../../public/audio"));
   },
   filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
     cb(null, file.originalname);
@@ -42,23 +47,21 @@ function checkFile(req: Request, res: Response, next: NextFunction) {
     return res.status(400).json({ message: "File is not audio" });
   }
 
-  //Check if file is mp3
-  if (!file.mimetype.includes("mp3")) {
-    return res.status(400).json({ message: "File is not mp3" });
-  }
 
 
 
   next();
 }
 
-router.post("/upload", upload.single("sample"), checkFile, async (req: Request, res: Response) => {
+router.post("/", upload.single("sample"), checkFile, async (req: Request, res: Response) => {
   try {
-    const userId = req.user?._id;
+    const user = jwt.verify(req.cookies?.accessToken, jwtSecret ) as ReturnedUser | null;
+    const userId = user?._id;
+    console.log(userId)
     const title: string = req.body.title;
     const description: string = req.body.description;
     const format: string = "mp3";
-    const bpm: number = req.body.bpm;
+    const bpm: number = Number(req.body.bpm);
     //Check if key is of type key
     const key: Key = req.body.key;
     if (!key) {
@@ -68,7 +71,12 @@ router.post("/upload", upload.single("sample"), checkFile, async (req: Request, 
     const genre: string = req.body.genre;
     const tags: string[] = req.body.tags;
 
-    const uploadedFileUrl: string = `${process.env.SERVER_URL}/public/samples/${req.file?.originalname}`
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+
+    const uploadedFileUrl: string = `${process.env.SERVER_URL}/audio/${req.file?.originalname}`
 
 
     const sample = new Sample({
@@ -80,7 +88,7 @@ router.post("/upload", upload.single("sample"), checkFile, async (req: Request, 
       key,
       genre,
       tags,
-      URL: uploadedFileUrl,
+      sample: uploadedFileUrl,
     });
     await sample.save();
 
@@ -153,7 +161,7 @@ try {
 router.get("/sort/date", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find().sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -238,7 +246,7 @@ router.get("/:id", async (req: Request, res: Response) => {
           "userId": 1,
           "title": 1,
           "description": 1,
-          "URL": 1,
+          "sample": 1,
           "format": 1,
           "bpm": 1,
           "key": 1,
@@ -373,7 +381,7 @@ router.get("/download/:id", async (req: Request, res: Response) => {
     await download.save();
 
 
-    res.status(200).download(sample.URL);
+    res.status(200).download(sample.sample);
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }

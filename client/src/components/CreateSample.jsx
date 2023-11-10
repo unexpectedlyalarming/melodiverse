@@ -29,10 +29,15 @@ export default function CreateSample() {
   const { data: sample, request: createSample } = useApi({
     url: "/samples",
     method: "post",
+    options: {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
     body: {
       title,
       description,
-      file,
+      sample: file,
       bpm,
       key,
       genre,
@@ -107,9 +112,9 @@ export default function CreateSample() {
         <label htmlFor="file">File</label>
         <input
           type="file"
+          name="file"
           id="file"
-          value={file}
-          onChange={(e) => setFile(e.target.value)}
+          onChange={(e) => setFile(e.target.files[0])}
         />
         <label htmlFor="bpm">BPM</label>
         <Slider.Root

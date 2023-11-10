@@ -1,5 +1,6 @@
 import React from "react";
 import Container from "../../components/Container";
+import SamplesContainer from "../../components/SamplesContainer";
 
 export default function Feed() {
   return (
@@ -12,17 +13,7 @@ export default function Feed() {
       </div>
       <h2>Latest</h2>
       <div className="feed-sample">
-        <ul className="feed-sample-list  flex flex-row items-center gap-5">
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-        </ul>
+        <SamplesContainer />
       </div>
 
       <h2>Popular</h2>

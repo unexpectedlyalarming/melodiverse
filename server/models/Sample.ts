@@ -5,7 +5,7 @@ interface Sample extends Document {
   userId: mongoose.Types.ObjectId;
   title: string;
   description: string;
-  URL: string;
+  sample: string;
   format: string;
   bpm?: number;
   key?: Key;
@@ -37,7 +37,7 @@ const SampleSchema = new mongoose.Schema<Sample>({
     max: 100,
   },
 
-  URL: {
+  sample: {
     type: String,
     required: true,
   },
