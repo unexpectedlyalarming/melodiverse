@@ -16,16 +16,17 @@ dotenv.config();
 // Global variables
 
 const port: number = Number(process.env.PORT) || 2000;
-const host: any = process.env.HOST || "localhost";
+const host: string = process.env.HOST || "localhost";
 
-const dbHost: any = process.env.DB_HOST || "localhost";
+const dbHost: string = process.env.DB_HOST || "localhost";
 const dbPort: any = process.env.DB_PORT || 27017;
 const dbName: string = process.env.DB_NAME || "melodiversedb";
 
-const dbUser: any = process.env.DB_USER || null;
-const dbPass: any = process.env.DB_PASS || null;
+const dbUser: string | null = process.env.DB_USER || null;
+const dbPass: string | null = process.env.DB_PASS || null;
 
-const sessionSecret: any = process.env.SESSION_SECRET || "secret";
+const corsOrigin: any = process.env.CORS_ORIGIN || "*";
+
 
 const dbUri = dbUser
   ? `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`
@@ -44,15 +45,15 @@ app.use(morgan("dev"));
 //set headers
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Origin", corsOrigin);
+  res.header("Access-Control-Allow-Headers", corsOrigin);
 
   next();
 });
 
 app.use(
   cors({
-    origin: "*",
+    origin: corsOrigin,
     methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS",
     withCredentials: true,
     accessControlAllowCredentials: true,

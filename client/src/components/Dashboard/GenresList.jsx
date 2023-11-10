@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useApi from "../hooks/useApi";
+import useApi from "../../hooks/useApi";
 
 export default function GenresList() {
   const {
@@ -29,5 +29,5 @@ export default function GenresList() {
     );
   });
 
-  return { genreList };
+  return <>{genreList.length > 0 ? genreList : <p>No genres found.</p>}</>;
 }

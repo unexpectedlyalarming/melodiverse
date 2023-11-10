@@ -5,13 +5,14 @@ const router = express.Router();
 import checkModStatus from '../utilities/modUtils';
 const Genre = require("../models/genre");
 import multer, { StorageEngine } from 'multer';
+import path from 'path';
 
 
 //Set up multer
 
 const storage: StorageEngine = multer.diskStorage({
     destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
-      cb(null, "../public/covers");
+      cb(null, path.join(__dirname, "../public/covers"));
     },
     filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
       cb(null, file.originalname);
@@ -46,7 +47,7 @@ router.get("/:genreId", async (req: Request, res: Response) => {
 
 //Create genre
 
-router.post("/", checkModStatus, upload.single("cover"), async (req: Request, res: Response) => {
+router.post("/", checkModStatus, upload.single("coverImage"), async (req: Request, res: Response) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: "No cover image provided" });
@@ -57,7 +58,7 @@ router.post("/", checkModStatus, upload.single("cover"), async (req: Request, re
 
         const coverImage = `${process.env.SERVER_URL}/public/samples/${req.file?.originalname}`
         const genre = new Genre({
-            name: req.body.name,
+            genre: req.body.genre,
             description: req.body.description,
             coverImage,
         });

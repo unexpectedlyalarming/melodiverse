@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useApi from "../hooks/useApi";
+import useApi from "../../hooks/useApi";
 
 export default function CreateGenre() {
   const [genre, setGenre] = useState("");
@@ -9,22 +9,23 @@ export default function CreateGenre() {
   const { request: createGenre } = useApi({
     url: "/genres",
     method: "post",
-    body: {
-      genre,
-      description,
-      coverImage,
+    options: {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
   });
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await createGenre();
+    const formData = new FormData();
+    formData.append("genre", genre);
+    formData.append("description", description);
+    formData.append("coverImage", coverImage);
+    await createGenre(formData);
   }
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col p-2 gap-5 justify-center items-center"
-    >
+    <form onSubmit={handleSubmit}>
       <label htmlFor="genre">Genre</label>
       <input
         type="text"
@@ -46,8 +47,7 @@ export default function CreateGenre() {
         type="file"
         name="coverImage"
         id="coverImage"
-        value={coverImage}
-        onChange={(e) => setCoverImage(e.target.value)}
+        onChange={(e) => setCoverImage(e.target.files[0])}
       />
       <button
         type="submit"

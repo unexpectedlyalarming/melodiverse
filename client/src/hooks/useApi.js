@@ -15,12 +15,16 @@ export default function useApi({
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  async function request() {
+  async function request(optionalData) {
     try {
-      const response = await axios[method](ServerURL + url, body, {
-        withCredentials: true,
-        ...options,
-      });
+      const response = await axios[method](
+        ServerURL + url,
+        optionalData ? optionalData : body,
+        {
+          withCredentials: true,
+          ...options,
+        }
+      );
       if (response.data) {
         setData(response.data);
       } else {

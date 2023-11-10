@@ -11,19 +11,16 @@ export default function Login() {
   const { login, success, error } = useAuth();
 
   async function handleSubmit(e) {
-    try {
-      e.preventDefault();
-      await login(username, password);
-    } catch (err) {
-      console.log(err);
-    }
+    e.preventDefault();
+    await login(username, password);
   }
 
   useEffect(() => {
+    console.log(success);
     if (success) {
       navigate("/");
     }
-  }, [success]);
+  }, [success, navigate]);
 
   return (
     <Container>

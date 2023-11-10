@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
 import UserContext from "../contexts/UserContext";
-import { set } from "mongoose";
 
 export default function useAuth() {
   const { setUser } = useContext(UserContext);
@@ -20,8 +19,8 @@ export default function useAuth() {
         },
         { withCredentials: true }
       );
-      if (response.data) {
-        setUser(response.data);
+      if (response.status === 200) {
+        setUser(response.data.user);
         setSuccess(true);
       } else {
         setError(response.data.message);
