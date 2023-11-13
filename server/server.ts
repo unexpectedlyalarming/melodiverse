@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use(morgan("dev"));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", corsOrigin);
   res.header("Access-Control-Allow-Headers", corsOrigin);
+  res.header("Cross-Origin-Resource-Policy", "cross-origin");
 
   next();
 });
@@ -57,6 +59,8 @@ app.use(
     methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS",
     withCredentials: true,
     accessControlAllowCredentials: true,
+    crossOriginResourcePolicy: "cross-origin",
+
   } as cors.CorsOptions)
 );
 
@@ -101,6 +105,11 @@ const samplesRoute = require("./routes/sample-routes/samples");
 
 app.use("/samples", verifyToken, samplesRoute);
 
+
+
+//Static files
+
+app.use('/audio', express.static(path.join(__dirname, 'public/audio')));
 
 
 app.listen(port, host, () => {

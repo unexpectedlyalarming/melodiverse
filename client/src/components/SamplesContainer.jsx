@@ -3,7 +3,7 @@ import AudioPlayer from "./AudioPlayer";
 import useApi from "../hooks/useApi";
 
 export default function SamplesContainer({ sort }) {
-  const sortMethod = `/sort/${sort}`;
+  const sortMethod = `sort/${sort}`;
   const {
     data: samples,
     request: getSamples,

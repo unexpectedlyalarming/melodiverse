@@ -10,6 +10,8 @@ import {
   Share2Icon,
 } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { set } from "mongoose";
 
 export default function AudioPlayer({ sample }) {
   //For visualizer
@@ -18,11 +20,13 @@ export default function AudioPlayer({ sample }) {
   const visualizerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     fetch(sample.sample)
       .then((audioBlob) => {
         setBlob(audioBlob);
+        setUrl(URL.createObjectURL(audioBlob));
       })
       .catch((err) => console.error(err));
   }, []);
@@ -52,9 +56,11 @@ export default function AudioPlayer({ sample }) {
         <Link to={`/user/${sample.userId}`} className="text-white text-sm">
           {sample.username}
         </Link>
-        <time className="text-white text-sm">Posted {sample.date}</time>
+        <time className="text-white text-sm">
+          Posted {sample.date.split("T", 1)}
+        </time>
       </div>
-      <audio ref={audioRef} src={sample.sample} />
+      <audio ref={audioRef} src={url} />
       <div className="flex flex-col justify-center items-center">
         {/* Visualize */}
         {blob && (
