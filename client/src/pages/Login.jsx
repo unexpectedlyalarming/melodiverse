@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Container from "../components/Container";
 import useAuth from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 export default function Login() {
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,11 +18,11 @@ export default function Login() {
   }
 
   useEffect(() => {
-    console.log(success);
-    if (success) {
-      navigate("/");
+    if (success && user) {
+      console.log(user);
+      navigate("/", { replace: true });
     }
-  }, [success, navigate]);
+  }, [success, navigate, user]);
 
   return (
     <Container>
@@ -42,6 +44,9 @@ export default function Login() {
         <button>Login</button>
       </form>
       <Link to="/register">Register</Link>
+      <button onClick={() => navigate("/", { replace: true })}>
+        Test Login
+      </button>{" "}
     </Container>
   );
 }

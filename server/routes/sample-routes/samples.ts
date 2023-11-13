@@ -160,7 +160,38 @@ try {
 
 router.get("/sort/date", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find().sort({ date: -1 });
+    //Add username to sample and sort by date
+    const samples = await Sample.aggregate([
+      {
+
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          "username": "$user.username",
+          "userId": 1,
+          "title": 1,
+          "description": 1,
+          "sample": 1,
+          "format": 1,
+          "bpm": 1,
+          "key": 1,
+          "genre": 1,
+          "duration": 1,
+          "tags": 1,
+          "_id": 1,
+          "date": 1,
+        },
+      },
+      {
+        $sort: { date: -1 },
+      }
+    ]);
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });

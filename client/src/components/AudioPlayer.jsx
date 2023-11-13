@@ -9,6 +9,7 @@ import {
   HeartIcon,
   Share2Icon,
 } from "@radix-ui/react-icons";
+import { Link } from "react-router-dom";
 
 export default function AudioPlayer({ sample }) {
   //For visualizer
@@ -48,7 +49,9 @@ export default function AudioPlayer({ sample }) {
     <div className="bg-gray-800 text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-white  ">
       <p className="text-white text-md">{sample.name}</p>
       <div className="sample-info flex flex-row place-content-around items-center gap-5">
-        <a className="text-white text-sm">{sample.userId}</a>
+        <Link to={`/user/${sample.userId}`} className="text-white text-sm">
+          {sample.username}
+        </Link>
         <time className="text-white text-sm">Posted {sample.date}</time>
       </div>
       <audio ref={audioRef} src={sample.sample} />

@@ -13,7 +13,7 @@ export default function Feed() {
       </div>
       <h2>Latest</h2>
       <div className="feed-sample">
-        <SamplesContainer />
+        <SamplesContainer sort="date" />
       </div>
 
       <h2>Popular</h2>

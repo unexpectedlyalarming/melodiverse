@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import AudioPlayer from "./AudioPlayer";
 import useApi from "../hooks/useApi";
 
-export default function SamplesContainer() {
-  const sortMethod = "/sort/date";
+export default function SamplesContainer({ sort }) {
+  const sortMethod = `/sort/${sort}`;
   const {
     data: samples,
     request: getSamples,
@@ -28,7 +28,7 @@ export default function SamplesContainer() {
       );
     });
   return (
-    <ul className="bg-black text-white flex flex-col justify-center items-center">
+    <ul className="p-2 overflow-x-hidden text-white flex flex-row gap-5 justify-center items-center">
       {sampleList}
     </ul>
   );
