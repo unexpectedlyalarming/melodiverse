@@ -20,13 +20,11 @@ export default function AudioPlayer({ sample }) {
   const visualizerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [url, setUrl] = useState("");
 
   useEffect(() => {
     fetch(sample.sample)
       .then((audioBlob) => {
         setBlob(audioBlob);
-        setUrl(URL.createObjectURL(audioBlob));
       })
       .catch((err) => console.error(err));
   }, []);
@@ -50,7 +48,7 @@ export default function AudioPlayer({ sample }) {
   };
 
   return (
-    <div className="bg-gray-800 text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-white  ">
+    <div className=" text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
       <p className="text-white text-md">{sample.name}</p>
       <div className="sample-info flex flex-row place-content-around items-center gap-5">
         <Link to={`/user/${sample.userId}`} className="text-white text-sm">
@@ -60,7 +58,7 @@ export default function AudioPlayer({ sample }) {
           Posted {sample.date.split("T", 1)}
         </time>
       </div>
-      <audio ref={audioRef} src={url} />
+      <audio ref={audioRef} src={sample.sample} />
       <div className="flex flex-col justify-center items-center">
         {/* Visualize */}
         {blob && (
@@ -91,7 +89,7 @@ export default function AudioPlayer({ sample }) {
             onValueChange={handleVolumeChange}
             className="relative flex items-center select-none touch-none w-[200px] h-5"
           >
-            <Slider.Track className="bg-blackA7 relative grow rounded-full h-[3px]">
+            <Slider.Track className="bg-blackA7 relative grow rounded-full h-2">
               <Slider.Range className="absolute bg-white rounded-full h-full" />
             </Slider.Track>
             <Slider.Thumb

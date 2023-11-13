@@ -34,7 +34,6 @@ function Router() {
   // }, [user, setUser]);
   // const [user, setUser] = useState("full");
   // const loading = false;
-  console.log(user);
 
   const AuthorizedRoute = ({ children }) => {
     if (!user) {

@@ -109,7 +109,12 @@ app.use("/samples", verifyToken, samplesRoute);
 
 //Static files
 
-app.use('/audio', express.static(path.join(__dirname, 'public/audio')));
+app.use('/audio',  function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", corsOrigin);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+},express.static(path.join(__dirname, 'public/audio')));
 
 
 app.listen(port, host, () => {

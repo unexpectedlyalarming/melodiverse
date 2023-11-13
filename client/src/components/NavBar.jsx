@@ -7,7 +7,6 @@ import useAuth from "../hooks/useAuth";
 export default function NavBar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { logout } = useAuth();
-  console.log(user);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -23,7 +22,7 @@ export default function NavBar({ user }) {
   const userOptions = (
     <>
       <li className="p-2 hover:bg-gray-800">
-        <Link to="/user">Profile</Link>
+        <Link to={`/profile/${user._id}`}>Profile</Link>
       </li>
       <li className="p-2 hover:bg-gray-800">
         <button onClick={logout}>Logout</button>
