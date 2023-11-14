@@ -97,13 +97,15 @@ export default function AudioPlayer({ sample }) {
 
   return (
     <div className=" text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
-      <p className="text-white text-md">{sample.name}</p>
+      <Link to={`/sample/${sample._id}`} className="text-white text-md">
+        {sample.title}
+      </Link>
       <div className="sample-info flex flex-row place-content-around items-center gap-5">
         <Link to={`/user/${sample.userId}`} className="text-white text-sm">
           {sample.username}
         </Link>
         <time className="text-white text-sm">
-          Posted {sample.date.split("T", 1)}
+          Posted {sample?.date?.split("T", 1)}
         </time>
       </div>
       <audio ref={audioRef} src={sample.sample} />

@@ -41,6 +41,7 @@ function Router() {
 
   const AuthorizedRoute = ({ children }) => {
     if (!user) {
+      console.log("no user");
       return <Navigate to="/login" />;
     }
     if (loading || !user) {

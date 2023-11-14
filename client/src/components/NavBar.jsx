@@ -1,12 +1,22 @@
 import React, { useState, useContext } from "react";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import useAuth from "../hooks/useAuth";
 
 export default function NavBar({ user }) {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const { logout } = useAuth();
+
+  async function handleLogout() {
+    try {
+      await logout();
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -25,7 +35,7 @@ export default function NavBar({ user }) {
         <Link to={`/profile/${user._id}`}>Profile</Link>
       </li>
       <li className="p-2 hover:bg-gray-800">
-        <button onClick={logout}>Logout</button>
+        <button onClick={handleLogout}>Logout</button>
       </li>
     </>
   );

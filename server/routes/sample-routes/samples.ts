@@ -12,6 +12,8 @@ import addView from "../../utilities/viewUtils";
 import path from "path";
 import jwt from 'jsonwebtoken';
 import ReturnedUser from "../../interfaces/ReturnedUser";
+import mongoose from "mongoose";
+
 //Set up multer
 
 const jwtSecret = process.env.JWT_SECRET || "secret";
@@ -352,8 +354,9 @@ router.get("/sort/likes", async (req: Request, res: Response) => {
 
 router.get("/:id", addView, async (req: Request, res: Response) => {
   try {
+    const id = new mongoose.Types.ObjectId(req.params.id);
     const sample = await Sample.aggregate([
-      { $match: { _id: req.params.id } },
+      { $match: { _id: id } },
       {
         $lookup: {
           from: "users",
@@ -361,6 +364,10 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
           foreignField: "_id",
           as: "user",
         },
+        
+      },
+      {
+        $unwind: "$user",
       },
       {
         $lookup: {
@@ -385,11 +392,12 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
           foreignField: "_id",
           as: "views",
         },
-
+      },
+      {
         $project: {
           "username": "$user.username",
-          "downloads": "$downloads",
-          "views": "$views",
+          "downloads": { $size: "$downloads" },
+          "views": { $size: "$views" },
           "packs": "$packs",
           "userId": 1,
           "title": 1,
@@ -402,21 +410,13 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
           "duration": 1,
           "tags": 1,
           "_id": 1,
+          "date": 1,
+          
 
         },
       },
-    ]);
-
-    //Update view count
-
-    const existingView = await View.findOne({ userId: req.user?._id, sampleId: req.params.id });
-    if (!existingView) {
-      const view = new View({
-        userId: req.user?._id,
-        sampleId: req.params.id,
-      });
-      await view.save();
-    }
+    
+    ]).then((result: any) => result[0]);
 
 
     res.status(200).json( sample );
