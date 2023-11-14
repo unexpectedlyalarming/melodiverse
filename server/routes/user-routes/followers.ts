@@ -37,15 +37,15 @@ router.get("/following/:id", async (req: Request, res: Response) => {
 
 //Follow/Unfollow user
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/:id", async (req: Request, res: Response) => {
     try {
         const userId = req.user?._id;
-        const receiverId = req.body.receiverId;
+        const receiverId = req.params.id;
         const following = await Follower.findOne({ senderId: userId, receiverId });
 
         if (following) {
             await Follower.findOneAndDelete({ senderId: userId, receiverId });
-            res.status(200).json({ message: "Unfollowed user" });
+            return res.status(200).json(false);
         }
 
         const newFollower = new Follower({
@@ -55,7 +55,7 @@ router.post("/", async (req: Request, res: Response) => {
 
         await newFollower.save();
 
-        res.status(200).json({ message: "Followed user" });
+        res.status(200).json(true);
 
     } catch (err: any) {
         res.status(500).json({ message: err.message });
@@ -63,4 +63,4 @@ router.post("/", async (req: Request, res: Response) => {
 })
 
 
-export default router;
+module.exports = router;

@@ -13,6 +13,35 @@ export default function Profile() {
     getProfile();
   }, []);
 
+  const { data: follower, request: follow } = useApi({
+    url: `/followers/${id}`,
+    method: "post",
+  });
+
+  async function handleFollow(e) {
+    e.preventDefault();
+    try {
+      await follow();
+      console.log(follower);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const othersProfile = (
+    <div className="flex flex-row gap-5 justify-center items-center">
+      <button
+        className="bg-primary-500 text-white rounded-md p-2"
+        onClick={handleFollow}
+      >
+        {follower ? "Unfollow" : "Follow"}
+      </button>
+      <button className="bg-primary-500 text-white rounded-md p-2">
+        Message
+      </button>
+    </div>
+  );
+
   return (
     <Container>
       <h2>Profile</h2>
@@ -24,6 +53,14 @@ export default function Profile() {
           className="object-contain w-40 h-40 rounded-full"
         />
         <p>{profile?.username}</p>
+        <div className="flex flex-row gap-5 justify-center items-center">
+          <button>{profile?.followers.length} Followers</button>
+          <button>{profile?.following.length} Following</button>
+        </div>
+        {
+          //id !== profile?._id &&
+          othersProfile
+        }
       </div>
     </Container>
   );

@@ -109,6 +109,10 @@ const likesRoute = require("./routes/likes");
 
 app.use("/likes", verifyToken, likesRoute);
 
+const followersRoute = require("./routes/user-routes/followers");
+
+app.use("/followers", verifyToken, followersRoute);
+
 
 
 //Static files

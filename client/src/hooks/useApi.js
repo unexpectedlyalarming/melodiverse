@@ -27,6 +27,8 @@ export default function useApi({
       );
       if (response.data) {
         setData(response.data);
+      } else if (response.data === false) {
+        setData(false);
       } else {
         const error = new Error(response.data);
         setData(error);
