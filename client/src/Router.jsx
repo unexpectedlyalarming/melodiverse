@@ -5,7 +5,8 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import useSession from "./hooks/useSession";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
@@ -22,6 +23,9 @@ import DashboardGenres from "./components/Dashboard/Genres";
 import DashboardUsers from "./components/Dashboard/Users";
 import DashboardGroups from "./components/Dashboard/Groups";
 import DashboardIssues from "./components/Dashboard/Issues";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function Router() {
   const { user, setUser, loading } = useSession();
@@ -132,9 +136,12 @@ function Router() {
   ]);
 
   return (
-    <UserProvider value={{ user, setUser }}>
-      <RouterProvider router={router}></RouterProvider>
-    </UserProvider>
+    <QueryClientProvider client={queryClient}>
+      <UserProvider value={{ user, setUser }}>
+        <RouterProvider router={router}></RouterProvider>
+      </UserProvider>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }
 

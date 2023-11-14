@@ -1,22 +1,38 @@
 import React, { useEffect } from "react";
 import AudioPlayer from "./AudioPlayer";
 import useApi from "../hooks/useApi";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import ServerURL from "../variables/URLs";
 
 export default function SamplesContainer({ sort }) {
   const sortMethod = `sort/${sort}`;
-  const {
-    data: samples,
-    request: getSamples,
-    loading,
-  } = useApi({
-    url: "/samples/" + sortMethod,
+  // const { request: getSamples, loading } = useApi({
+  //   url: "/samples/" + sortMethod,
+  // });
+
+  async function fetchSamples() {
+    try {
+      const res = await axios.get(ServerURL + "/samples/" + sortMethod, {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // useEffect(() => {
+  //   getSamples();
+  // }, []);
+
+  const { data: samples, status } = useQuery({
+    queryKey: ["samples"],
+    queryFn: fetchSamples,
+    refetchInterval: 4000,
   });
 
-  useEffect(() => {
-    getSamples();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
+  if (status === "loading") return <div>Loading...</div>;
 
   const sampleList =
     samples &&

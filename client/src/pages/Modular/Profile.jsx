@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Container from "../../components/Container";
 import { useParams } from "react-router-dom";
 import useApi from "../../hooks/useApi";
+
 export default function Profile() {
   const { id } = useParams();
 
