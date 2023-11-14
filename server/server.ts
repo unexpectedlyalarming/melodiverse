@@ -8,6 +8,8 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import path from "path";
+import { Response, NextFunction } from "express";
+import Request from "./interfaces/Request";
 
 
 dotenv.config();
@@ -115,14 +117,18 @@ app.use("/followers", verifyToken, followersRoute);
 
 
 
-//Static files
-
-app.use('/audio',  function(req, res, next) {
+function filesCors(req: Request, res: Response, next: NextFunction) {
   res.header("Access-Control-Allow-Origin", corsOrigin);
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Cross-Origin-Resource-Policy", "cross-origin");
   next();
-},express.static(path.join(__dirname, 'public/audio')));
+}
+
+//Static files
+
+app.use('/audio', filesCors ,express.static(path.join(__dirname, 'public/audio')));
+
+app.use('/covers', filesCors, express.static(path.join(__dirname, 'public/covers')));
 
 
 app.listen(port, host, () => {

@@ -172,6 +172,23 @@ router.get("/sort/date", async (req: Request, res: Response) => {
         },
       },
       {
+
+        $lookup: {
+          from: "downloads",
+          localField: "downloads",
+          foreignField: "_id",
+          as: "downloads",
+        }
+      },
+      {
+        $lookup: {
+          from: "views",
+          localField: "views",
+          foreignField: "_id",
+          as: "views",
+        }
+      },
+      {
         $project: {
           "username": "$user.username",
           "userId": 1,
@@ -183,7 +200,9 @@ router.get("/sort/date", async (req: Request, res: Response) => {
           "key": 1,
           "genre": 1,
           "duration": 1,
+          "downloads": { $size: "$downloads" },
           "tags": 1,
+          "views": { $size: "$views" },
           "_id": 1,
           "date": 1,
         },
@@ -202,8 +221,57 @@ router.get("/sort/date", async (req: Request, res: Response) => {
 
 router.get("/sort/downloads", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find().populate("downloads").sort({ downloads: -1 });
-    res.status(200).json({ samples });
+    const samples = await Sample.aggregate([
+      {
+
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+
+        $lookup: {
+          from: "downloads",
+          localField: "downloads",
+          foreignField: "_id",
+          as: "downloads",
+        }
+      },
+      {
+        $lookup: {
+          from: "views",
+          localField: "views",
+          foreignField: "_id",
+          as: "views",
+        }
+      },
+      {
+        $project: {
+          "username": "$user.username",
+          "userId": 1,
+          "title": 1,
+          "description": 1,
+          "sample": 1,
+          "format": 1,
+          "bpm": 1,
+          "key": 1,
+          "genre": 1,
+          "duration": 1,
+          "downloads": { $size: "$downloads" },
+          "tags": 1,
+          "views": { $size: "$views" },
+          "_id": 1,
+          "date": 1,
+        },
+      },
+      {
+        $sort: { downloads: -1 },
+      }
+    ]);
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -211,10 +279,59 @@ router.get("/sort/downloads", async (req: Request, res: Response) => {
 
 //Get all samples, sort by views
 
-router.get("/sort/views", addView, async (req: Request, res: Response) => {
+router.get("/sort/views", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find().populate("views").sort({ views: -1 });
-    res.status(200).json({ samples });
+    const samples = await Sample.aggregate([
+      {
+
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+
+        $lookup: {
+          from: "downloads",
+          localField: "downloads",
+          foreignField: "_id",
+          as: "downloads",
+        }
+      },
+      {
+        $lookup: {
+          from: "views",
+          localField: "views",
+          foreignField: "_id",
+          as: "views",
+        }
+      },
+      {
+        $project: {
+          "username": "$user.username",
+          "userId": 1,
+          "title": 1,
+          "description": 1,
+          "sample": 1,
+          "format": 1,
+          "bpm": 1,
+          "key": 1,
+          "genre": 1,
+          "duration": 1,
+          "downloads": { $size: "$downloads" },
+          "tags": 1,
+          "views": { $size: "$views" },
+          "_id": 1,
+          "date": 1,
+        },
+      },
+      {
+        $sort: { views: -1 },
+      }
+    ]);
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -225,7 +342,7 @@ router.get("/sort/views", addView, async (req: Request, res: Response) => {
 router.get("/sort/likes", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find().populate("likes").sort({ likes: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -233,7 +350,7 @@ router.get("/sort/likes", async (req: Request, res: Response) => {
 
 // Get sample by id
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", addView, async (req: Request, res: Response) => {
   try {
     const sample = await Sample.aggregate([
       { $match: { _id: req.params.id } },
@@ -302,7 +419,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 
 
-    res.status(200).json({ sample });
+    res.status(200).json( sample );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -315,7 +432,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.get("/user/:id", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ userId: req.params.id }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -328,7 +445,7 @@ router.get("/user/:id", async (req: Request, res: Response) => {
 router.get("/pack/:id", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ packs: req.params.id }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -340,7 +457,7 @@ router.get("/pack/:id", async (req: Request, res: Response) => {
 router.get("/tag/:tag", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ tags: req.params.tag }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -352,7 +469,7 @@ router.get("/tag/:tag", async (req: Request, res: Response) => {
 router.get("/genre/:genre", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ genre: req.params.genre }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -364,7 +481,7 @@ router.get("/genre/:genre", async (req: Request, res: Response) => {
 router.get("/key/:key", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ key: req.params.key }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json(samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -376,7 +493,7 @@ router.get("/key/:key", async (req: Request, res: Response) => {
 router.get("/bpm/:bpm", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ bpm: req.params.bpm }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -388,7 +505,7 @@ router.get("/bpm/:bpm", async (req: Request, res: Response) => {
 router.get("/bpm/:min/:max", async (req: Request, res: Response) => {
   try {
     const samples = await Sample.find({ bpm: { $gte: req.params.min, $lte: req.params.max } }).sort({ date: -1 });
-    res.status(200).json({ samples });
+    res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }

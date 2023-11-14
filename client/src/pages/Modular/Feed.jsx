@@ -19,34 +19,13 @@ export default function Feed() {
       <h2>Popular</h2>
 
       <div className="feed-sample flex flex-row items-center">
-        <ul className="feed-sample-list flex flex-row items-center gap-5">
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-        </ul>
+        <SamplesContainer sort="likes" />
       </div>
 
       <h2>Following</h2>
 
       <div className="feed-sample">
-        <ul className="feed-sample-list flex flex-row items-center gap-5">
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-          <li className="feed-sample-item">
-            <a>example</a>
-          </li>
-        </ul>
+        <SamplesContainer sort="views" />
       </div>
     </Container>
   );

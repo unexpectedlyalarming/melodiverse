@@ -56,7 +56,7 @@ router.post("/", checkModStatus, upload.single("coverImage"), async (req: Reques
             return res.status(403).json({ message: "You are not authorized to perform this action" });
         }
 
-        const coverImage = `${process.env.SERVER_URL}/public/samples/${req.file?.originalname}`
+        const coverImage = `${process.env.SERVER_URL}/covers/${req.file?.originalname}`
         const genre = new Genre({
             genre: req.body.genre,
             description: req.body.description,

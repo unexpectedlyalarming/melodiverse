@@ -19,15 +19,27 @@ export default function GenresList() {
 
   const genreList = genres.map((genre) => {
     return (
-      <ul key={genre._id}>
-        <li>
-          <img src={genre.coverImage} alt={genre.genre} />
-          {genre.genre}
-          {genre.description}
-        </li>
-      </ul>
+      <li
+        key={genre._id}
+        className="flex flex-col justify-center items-center gap-5"
+      >
+        <img
+          src={genre.coverImage ? genre.coverImage : "./img/avatar.png"}
+          alt={genre.genre}
+          className="object-contain w-40 h-40 rounded-md"
+        />
+        <p>{genre.genre}</p>
+        <p>{genre.description}</p>
+      </li>
     );
   });
 
-  return <>{genreList.length > 0 ? genreList : <p>No genres found.</p>}</>;
+  if (genreList.length > 0)
+    return (
+      <ul className="flex flex-row gap-5 items-center justify-center w-full">
+        {genreList}
+      </ul>
+    );
+
+  return <div>No genres found</div>;
 }
