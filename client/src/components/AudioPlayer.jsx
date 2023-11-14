@@ -10,8 +10,7 @@ import {
   Share2Icon,
 } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { set } from "mongoose";
+import useApi from "../hooks/useApi";
 
 export default function AudioPlayer({ sample }) {
   //For visualizer
@@ -46,6 +45,55 @@ export default function AudioPlayer({ sample }) {
       setVolume(value);
     }
   };
+
+  async function handleDownload(e) {
+    e.preventDefault();
+    try {
+      //Download sample.sample
+      const response = await fetch(sample.sample);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const fileName = sample.sample.split("/").pop();
+
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const {
+    request: likeSample,
+    data: likes,
+    setData: setLikes,
+  } = useApi({
+    url: `/likes/${sample._id}`,
+    method: "post",
+  });
+
+  async function handleLike(e) {
+    e.preventDefault();
+    try {
+      await likeSample();
+      setLikes([...likes, { userId: sample.userId }]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    setLikes(sample.likes);
+  }, []);
+
+  function handleShare(e) {
+    e.preventDefault();
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+  }
 
   return (
     <div className=" text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
@@ -100,14 +148,15 @@ export default function AudioPlayer({ sample }) {
           <p className="text-white text-sm">{Math.round(volume * 100)}</p>
         </div>
         <div className="interactables flex justify-center gap-2 items-center flex-row">
-          <p className="text-white text-md">
-            <DownloadIcon />
+          <p className="text-white">
+            <DownloadIcon onClick={handleDownload} />
+          </p>
+          <p className="text-white text-md flex flex-row gap-1 items-center justify-center">
+            <HeartIcon onClick={handleLike} />
+            {likes?.length ? likes.length : 0}
           </p>
           <p className="text-white text-md">
-            <HeartIcon />
-          </p>
-          <p className="text-white text-md">
-            <Share2Icon />
+            <Share2Icon onClick={handleShare} />
           </p>
         </div>
       </div>

@@ -105,6 +105,10 @@ const samplesRoute = require("./routes/sample-routes/samples");
 
 app.use("/samples", verifyToken, samplesRoute);
 
+const likesRoute = require("./routes/likes");
+
+app.use("/likes", verifyToken, likesRoute);
+
 
 
 //Static files

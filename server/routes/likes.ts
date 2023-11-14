@@ -2,11 +2,14 @@ import express from 'express';
 
 const router = express.Router();
 
-const Like = require("../../models/Like");
+import { Response, NextFunction } from "express";
+import Request from "../interfaces/Request";
+import mongoose from 'mongoose';
 
+const Like = require("../models/Like");
 //Get likes by item ID
 
-router.get("/:itemId", async (req: any, res: any) => {
+router.get("/:itemId", async (req: Request, res: Response) => {
     try {
         const likes = await Like.find({ itemId: req.params.itemId });
         res.status(200).json(likes);
@@ -17,7 +20,7 @@ router.get("/:itemId", async (req: any, res: any) => {
 
 //Get like by ID
 
-router.get("/:likeId", async (req: any, res: any) => {
+router.get("/:likeId", async (req: Request, res: Response) => {
     try {
         const like = await Like.findById(req.params.likeId);
         res.status(200).json(like);
@@ -28,7 +31,7 @@ router.get("/:likeId", async (req: any, res: any) => {
 
 //Get likes by user ID
 
-router.get("/user/:userId", async (req: any, res: any) => {
+router.get("/user/:userId", async (req: Request, res: Response) => {
     try {
         const likes = await Like.find({ userId: req.params.userId });
         res.status(200).json(likes);
@@ -39,22 +42,26 @@ router.get("/user/:userId", async (req: any, res: any) => {
 
 //Create like, or delete if already exists
 
-router.post("/:itemId", async (req: any, res: any) => {
+router.post("/:itemId", async (req: Request, res: Response) => {
     try {
-        const userId = req.user?._id;
+        
+        
+        const userId = new mongoose.Types.ObjectId(req.user?._id);
+
         const existingLike = await Like.findOne({ userId, itemId: req.params.itemId });
         if (existingLike) {
-            await existingLike.remove();
+            await Like.findByIdAndDelete(existingLike._id);
             return res.status(200).json({ message: "Like removed" });
         }
         const like = new Like({
             userId: userId,
             itemId: req.params.itemId,
         });
-        const savedLike = await like.save();
-        res.status(200).json(savedLike);
+        console.log(like);
+        await like.save();
+        res.status(200).json(like);
     } catch (err: any) {
-        res.status(500).json({ message: err });
+        res.status(500).json({ message: err.message });
     }
 });
 

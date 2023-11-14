@@ -116,6 +116,7 @@ router.get("/logout", async (req: Request, res: Response) => {
 router.get("/validate-session", async (req: Request, res: Response) => {
   try {
     const token = req.cookies?.accessToken;
+
     if (!token) {
       return res.status(401).json({ message: "No token, authorization denied" });
     }
@@ -134,6 +135,7 @@ router.get("/validate-session", async (req: Request, res: Response) => {
     } else {
       newUser.moderator = false;
     }
+    
 
     const user: ReturnedUser = {
       username: newUser.username,
@@ -143,7 +145,7 @@ router.get("/validate-session", async (req: Request, res: Response) => {
       moderator: newUser.moderator,
     };
     req.user = user
-    res.status(200).json( {user} );
+    res.status(200).json(user);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

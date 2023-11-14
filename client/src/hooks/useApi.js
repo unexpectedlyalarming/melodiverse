@@ -37,5 +37,5 @@ export default function useApi({
     }
   }
 
-  return { data, request, loading };
+  return { data, setData, request, loading };
 }

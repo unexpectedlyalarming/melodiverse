@@ -17,7 +17,7 @@ export default function useSession() {
           setUser(null);
         }
         if (response.data) {
-          setUser(response.data.user);
+          setUser(response.data);
         } else {
           setUser(null);
         }
