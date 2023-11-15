@@ -23,6 +23,9 @@ export default function Dashboard() {
         <li>
           <Link to="/dashboard/issues">Issues</Link>
         </li>
+        <li>
+          <Link to="/dashboard/alerts">Alerts</Link>
+        </li>
       </ul>
     </div>
   );

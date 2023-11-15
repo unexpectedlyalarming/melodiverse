@@ -65,4 +65,19 @@ router.post("/:itemId", async (req: Request, res: Response) => {
     }
 });
 
+//Check like for user and post
+
+router.get("/check/:itemId", async (req: Request, res: Response) => {
+    try {
+        const userId = new mongoose.Types.ObjectId(req.user?._id);
+        const existingLike = await Like.findOne({ userId, itemId: req.params.itemId });
+        if (existingLike) {
+            return res.status(200).json(true);
+        }
+        res.status(200).json(false);
+    } catch (err: any) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;

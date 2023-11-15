@@ -115,13 +115,17 @@ const followersRoute = require("./routes/user-routes/followers");
 
 app.use("/followers", verifyToken, followersRoute);
 
-// const groupsRoute = require("./routes/groups");
+const groupsRoute = require("./routes/groups");
 
-// app.use("/groups", verifyToken, groupsRoute);
+app.use("/groups", verifyToken, groupsRoute);
 
 const commentsRoute = require("./routes/comments");
 
 app.use("/comments", verifyToken, commentsRoute);
+
+const alertsRoute = require("./routes/user-routes/alerts");
+
+app.use("/alerts", verifyToken, alertsRoute);
 
 
 
@@ -138,6 +142,7 @@ app.use('/audio', filesCors ,express.static(path.join(__dirname, 'public/audio')
 
 app.use('/covers', filesCors, express.static(path.join(__dirname, 'public/covers')));
 
+app.use('/logos', filesCors, express.static(path.join(__dirname, 'public/logos')));
 
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`);

@@ -24,6 +24,8 @@ import DashboardUsers from "./components/Dashboard/Users";
 import DashboardGroups from "./components/Dashboard/Groups";
 import DashboardIssues from "./components/Dashboard/Issues";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DashboardAlerts from "./components/Dashboard/Alerts";
+import Inbox from "./pages/Inbox";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +43,7 @@ function Router() {
 
   const AuthorizedRoute = ({ children }) => {
     if (!user) {
-      console.log("no user");
+      console.log("no user" + user);
       return <Navigate to="/login" />;
     }
     if (loading || !user) {
@@ -92,6 +94,10 @@ function Router() {
           path: "/profile/:id",
           element: <Profile />,
         },
+        {
+          path: "/inbox",
+          element: <Inbox />,
+        },
 
         //Sample packs, messages, alerts
       ],
@@ -123,6 +129,10 @@ function Router() {
         {
           path: "issues",
           element: <DashboardIssues />,
+        },
+        {
+          path: "alerts",
+          element: <DashboardAlerts />,
         },
       ],
     },

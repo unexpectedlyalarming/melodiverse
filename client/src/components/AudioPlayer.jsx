@@ -19,6 +19,7 @@ export default function AudioPlayer({ sample }) {
   const visualizerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
+  const [likes, setLikes] = useState(sample.likes);
 
   useEffect(() => {
     fetch(sample.sample)
@@ -55,7 +56,8 @@ export default function AudioPlayer({ sample }) {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      const fileName = sample.sample.split("/").pop();
+      const fileName =
+        sample.title + "-" + sample.key + "-" + sample.bpm + "bpm";
 
       a.download = fileName;
       document.body.appendChild(a);
@@ -66,20 +68,26 @@ export default function AudioPlayer({ sample }) {
     }
   }
 
-  const {
-    request: likeSample,
-    data: likes,
-    setData: setLikes,
-  } = useApi({
+  const { request: likeSample, data: likeSuccess } = useApi({
     url: `/likes/${sample._id}`,
     method: "post",
+  });
+
+  const { data: liked, request: checkLike } = useApi({
+    url: `/likes/check/${sample._id}`,
   });
 
   async function handleLike(e) {
     e.preventDefault();
     try {
       await likeSample();
-      setLikes([...likes, { userId: sample.userId }]);
+
+      await checkLike();
+      if (liked) {
+        setLikes(likes - 1);
+      } else {
+        setLikes(likes + 1);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -87,6 +95,7 @@ export default function AudioPlayer({ sample }) {
 
   useEffect(() => {
     setLikes(sample.likes);
+    checkLike();
   }, []);
 
   function handleShare(e) {
@@ -155,7 +164,7 @@ export default function AudioPlayer({ sample }) {
           </p>
           <p className="text-white text-md flex flex-row gap-1 items-center justify-center">
             <HeartIcon onClick={handleLike} />
-            {likes?.length ? likes.length : 0}
+            {likes}
           </p>
           <p className="text-white text-md">
             <Share2Icon onClick={handleShare} />

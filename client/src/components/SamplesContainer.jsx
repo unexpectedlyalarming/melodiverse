@@ -22,14 +22,21 @@ export default function SamplesContainer({ sort }) {
     }
   }
 
+  useEffect(() => {
+    refetch();
+  }, [sort]);
+
   // useEffect(() => {
   //   getSamples();
   // }, []);
 
-  const { data: samples, status } = useQuery({
+  const {
+    data: samples,
+    status,
+    refetch,
+  } = useQuery({
     queryKey: ["samples"],
     queryFn: fetchSamples,
-    refetchInterval: 4000,
   });
 
   if (status === "loading") return <div>Loading...</div>;

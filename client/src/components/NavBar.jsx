@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { CaretDownIcon } from "@radix-ui/react-icons";
+import { BellIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import useAuth from "../hooks/useAuth";
@@ -36,6 +36,10 @@ export default function NavBar({ user }) {
       </li>
       <li className="p-2 hover:bg-gray-800">
         <button onClick={handleLogout}>Logout</button>
+      </li>
+      <li className="p-2 hover:bg-gray-800 flex justify-center items-center gap-2">
+        <Link to="/inbox">Inbox</Link>
+        <BellIcon />
       </li>
     </>
   );

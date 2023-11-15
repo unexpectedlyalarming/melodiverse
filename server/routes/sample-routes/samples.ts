@@ -191,6 +191,15 @@ router.get("/sort/date", async (req: Request, res: Response) => {
         }
       },
       {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "likes",
+        }
+      },
+      
+      {
         $project: {
           "username": "$user.username",
           "userId": 1,
@@ -203,6 +212,7 @@ router.get("/sort/date", async (req: Request, res: Response) => {
           "genre": 1,
           "duration": 1,
           "downloads": { $size: "$downloads" },
+          "likes": { $size: "$likes" },
           "tags": 1,
           "views": { $size: "$views" },
           "_id": 1,
@@ -251,6 +261,15 @@ router.get("/sort/downloads", async (req: Request, res: Response) => {
         }
       },
       {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "likes",
+        }
+      },
+      
+      {
         $project: {
           "username": "$user.username",
           "userId": 1,
@@ -263,6 +282,7 @@ router.get("/sort/downloads", async (req: Request, res: Response) => {
           "genre": 1,
           "duration": 1,
           "downloads": { $size: "$downloads" },
+          "likes": { $size: "$likes" },
           "tags": 1,
           "views": { $size: "$views" },
           "_id": 1,
@@ -311,6 +331,15 @@ router.get("/sort/views", async (req: Request, res: Response) => {
         }
       },
       {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "likes",
+        }
+      },
+      
+      {
         $project: {
           "username": "$user.username",
           "userId": 1,
@@ -323,6 +352,7 @@ router.get("/sort/views", async (req: Request, res: Response) => {
           "genre": 1,
           "duration": 1,
           "downloads": { $size: "$downloads" },
+          "likes": { $size: "$likes" },
           "tags": 1,
           "views": { $size: "$views" },
           "_id": 1,
@@ -394,11 +424,17 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
         },
       },
       {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "likes",
+        }
+      },
+      
+      {
         $project: {
           "username": "$user.username",
-          "downloads": { $size: "$downloads" },
-          "views": { $size: "$views" },
-          "packs": "$packs",
           "userId": 1,
           "title": 1,
           "description": 1,
@@ -408,7 +444,10 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
           "key": 1,
           "genre": 1,
           "duration": 1,
+          "downloads": { $size: "$downloads" },
+          "likes": { $size: "$likes" },
           "tags": 1,
+          "views": { $size: "$views" },
           "_id": 1,
           "date": 1,
           

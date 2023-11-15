@@ -2,24 +2,15 @@ import React, { useState } from "react";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router";
 
-export default function CreateComment() {
+export default function CreateComment({ handleCreation }) {
   const [comment, setComment] = useState("");
   const { id } = useParams();
 
-  const { request } = useApi({
-    method: "post",
-    url: "/comments/",
-    body: {
-      comment,
-      itemId: id,
-    },
-  });
-
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        request();
+        handleCreation({ comment, itemId: id });
       }}
     >
       <label htmlFor="comment">Comment</label>
