@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import axios from "axios";
 import ServerURL from "../../variables/URLs";
+import CommentsContainer from "../../components/Comments/CommentsContainer";
 export default function Sample() {
   const { id } = useParams();
 
@@ -39,6 +40,7 @@ export default function Sample() {
       <div className="sample-tags">
         <p className="sample-tag">{sample?.tag}</p>
       </div>
+      <CommentsContainer />
     </div>
   );
 }

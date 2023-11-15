@@ -97,7 +97,7 @@ router.post(
 
       });
       req.user = user;
-      res.status(200).json({ user });
+      res.status(200).json( user );
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

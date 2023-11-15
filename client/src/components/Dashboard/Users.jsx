@@ -15,7 +15,12 @@ export default function DashboardUsers() {
     getUsers();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="p-5 flex flex-col items-center text-white w-full">
+        Loading...
+      </div>
+    );
 
   const userList =
     users &&

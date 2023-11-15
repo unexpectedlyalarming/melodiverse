@@ -9,9 +9,9 @@ const Comment = require("../models/comment");
 
 //Get comments by post ID
 
-router.get("/:postId", async (req: Request, res: Response) => {
+router.get("/sample/:postId", async (req: Request, res: Response) => {
     try {
-        const comments = await Comment.find({ postId: req.params.postId });
+        const comments = await Comment.find({ itemId: req.params.postId });
         res.status(200).json(comments);
     } catch (err: any) {
         res.status(500).json({ message: err });
@@ -48,7 +48,7 @@ router.post("/", async (req: Request, res: Response) => {
         const userId = req.user?._id;
         const comment = new Comment({
             userId: userId,
-            itemId: req.body.postId,
+            itemId: req.body.itemId,
             comment: req.body.comment,
         });
         const savedComment = await comment.save();

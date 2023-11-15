@@ -115,6 +115,14 @@ const followersRoute = require("./routes/user-routes/followers");
 
 app.use("/followers", verifyToken, followersRoute);
 
+// const groupsRoute = require("./routes/groups");
+
+// app.use("/groups", verifyToken, groupsRoute);
+
+const commentsRoute = require("./routes/comments");
+
+app.use("/comments", verifyToken, commentsRoute);
+
 
 
 function filesCors(req: Request, res: Response, next: NextFunction) {
