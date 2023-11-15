@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
-import React from "react";
+import React, { useEffect } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import useSession from "./hooks/useSession";
 import NavBar from "./components/NavBar";
@@ -42,12 +42,12 @@ function Router() {
   // const loading = false;
 
   const AuthorizedRoute = ({ children }) => {
+    if (loading) {
+      return <div>Loading...</div>;
+    }
     if (!user) {
       console.log("no user" + user);
       return <Navigate to="/login" />;
-    }
-    if (loading || !user) {
-      return <div>Loading...</div>;
     }
 
     return children;
@@ -149,7 +149,7 @@ function Router() {
   return (
     <QueryClientProvider client={queryClient}>
       <UserProvider value={{ user, setUser }}>
-        <RouterProvider router={router}></RouterProvider>
+        <RouterProvider router={router} />
       </UserProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>

@@ -138,7 +138,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
 router.delete("/:id", async (req: Request, res: Response) => {
 try {
-  const userId = req.user?._id;
+  const userId = new mongoose.Types.ObjectId(req.user?._id);
 
   const existingSample = await Sample.findById(req.params.id);
 

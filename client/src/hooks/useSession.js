@@ -3,7 +3,7 @@ import ServerURL from "../variables/URLs";
 import UserContext from "../contexts/UserContext";
 import axios from "axios";
 export default function useSession() {
-  const [user, setUser] = useState(UserContext);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

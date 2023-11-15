@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import { AudioVisualizer } from "react-audio-visualize";
 import {
@@ -11,8 +11,14 @@ import {
 } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import useApi from "../hooks/useApi";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import UserContext from "../contexts/UserContext";
+import ServerURL from "../variables/URLs";
 
 export default function AudioPlayer({ sample }) {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
   //For visualizer
   const [blob, setBlob] = useState(null);
   const audioRef = useRef(null);
@@ -68,7 +74,7 @@ export default function AudioPlayer({ sample }) {
     }
   }
 
-  const { request: likeSample, data: likeSuccess } = useApi({
+  const { request: likeSample } = useApi({
     url: `/likes/${sample._id}`,
     method: "post",
   });
@@ -103,6 +109,35 @@ export default function AudioPlayer({ sample }) {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
   }
+
+  async function handleDelete() {
+    try {
+      await axios.delete(ServerURL + `/samples/${sample._id}`, {
+        withCredentials: true,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleEdit() {
+    try {
+      navigate(`/sample/edit/${sample._id}`);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const ownerControls = (
+    <>
+      <button onClick={handleDelete} className="text-white text-md">
+        Delete
+      </button>
+      <button onClick={handleEdit} className="text-white text-md">
+        Edit
+      </button>
+    </>
+  );
 
   return (
     <div className=" text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
@@ -169,6 +204,7 @@ export default function AudioPlayer({ sample }) {
           <p className="text-white text-md">
             <Share2Icon onClick={handleShare} />
           </p>
+          {sample.userId === user?._id && ownerControls}
         </div>
       </div>
     </div>
