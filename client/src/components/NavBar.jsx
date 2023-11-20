@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
 import { BellIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
-import UserContext from "../contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import useAuth from "../hooks/useAuth";
 
-export default function NavBar({ user }) {
+export default function NavBar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const { logout } = useAuth();
+  const { user } = useContext(UserContext);
 
   async function handleLogout() {
     try {

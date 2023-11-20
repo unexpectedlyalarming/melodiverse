@@ -33,7 +33,7 @@ export default function Inbox() {
   return (
     <div className="p-5 flex flex-col items-center text-white w-full">
       <h2>Alerts</h2>
-      <ul className="p-2 overflow-x-hidden text-white flex flex-row gap-5 justify-center items-center">
+      <ul className="p-2 overflow-x-hidden text-white flex flex-col gap-5 justify-center items-center">
         {alertList}
       </ul>
     </div>

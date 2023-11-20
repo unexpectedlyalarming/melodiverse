@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
-import UserContext from "../contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function useAuth() {

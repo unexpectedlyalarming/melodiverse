@@ -4,10 +4,8 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import { UserProvider } from "./contexts/UserContext";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import useSession from "./hooks/useSession";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -26,11 +24,16 @@ import DashboardIssues from "./components/Dashboard/Issues";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DashboardAlerts from "./components/Dashboard/Alerts";
 import Inbox from "./pages/Inbox";
+import axios from "axios";
+import ServerURL from "./variables/URLs";
+import { UserProvider } from "./contexts/UserContext";
 
 const queryClient = new QueryClient();
 
-function Router() {
-  const { user, setUser, loading } = useSession();
+export default function Router() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   // useEffect(() => {
   //   if (user) {
   //     setUser(user);
@@ -41,10 +44,36 @@ function Router() {
   // const [user, setUser] = useState("full");
   // const loading = false;
 
-  const AuthorizedRoute = ({ children }) => {
-    if (loading) {
-      return <div>Loading...</div>;
+  const Layout = () => {
+    return (
+      <>
+        <NavBar />
+        <Outlet />
+      </>
+    );
+  };
+
+  useEffect(() => {
+    async function checkExistingUserSession() {
+      try {
+        const response = await axios.get(ServerURL + "/auth/validate-session", {
+          withCredentials: true,
+        });
+        if (response.data) {
+          setUser(response.data);
+        }
+        if (!response.data) {
+          setUser(null);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+      }
     }
+    checkExistingUserSession();
+  }, []);
+
+  const AuthorizedRoute = ({ children }) => {
     if (!user) {
       console.log("no user" + user);
       return <Navigate to="/login" />;
@@ -53,14 +82,6 @@ function Router() {
     return children;
   };
 
-  const Layout = () => {
-    return (
-      <>
-        <NavBar user={user} />
-        <Outlet />
-      </>
-    );
-  };
   const router = createBrowserRouter([
     {
       path: "/",
@@ -146,6 +167,8 @@ function Router() {
     },
   ]);
 
+  if (loading) return <p>Loading...</p>;
+
   return (
     <QueryClientProvider client={queryClient}>
       <UserProvider value={{ user, setUser }}>
@@ -155,5 +178,3 @@ function Router() {
     </QueryClientProvider>
   );
 }
-
-export default Router;

@@ -22,11 +22,6 @@ export default function Sample() {
 
   return (
     <div className="sample flex flex-col items-center justify-center">
-      <div className="sample-header">
-        <p className="sample-name">{sample?.name}</p>
-        <p className="sample-username">{sample?.username}</p>
-        <time className="sample-date">{sample?.date}</time>
-      </div>
       <AudioPlayer sample={sample} />
       <p className="sample-description">{sample?.description}</p>
       <div className="sample-info">

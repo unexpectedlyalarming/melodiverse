@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import UserContext from "../contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import ServerURL from "../variables/URLs";
 
 export default function AudioPlayer({ sample }) {
@@ -127,6 +127,7 @@ export default function AudioPlayer({ sample }) {
       console.error(err);
     }
   }
+  console.log(sample.userId, user);
 
   const ownerControls = (
     <>
