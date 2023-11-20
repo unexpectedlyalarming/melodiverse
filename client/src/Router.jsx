@@ -14,6 +14,7 @@ import Samples from "./pages/Samples";
 import Groups from "./pages/Groups";
 import About from "./pages/About";
 import Sample from "./pages/Modular/Sample";
+import EditSample from "./pages/Modular/EditSample";
 import Profile from "./pages/Modular/Profile";
 import Dashboard from "./pages/Dashboard";
 import DashboardHome from "./components/Dashboard/DashboardHome";
@@ -27,6 +28,7 @@ import Inbox from "./pages/Inbox";
 import axios from "axios";
 import ServerURL from "./variables/URLs";
 import { UserProvider } from "./contexts/UserContext";
+import { set } from "mongoose";
 
 const queryClient = new QueryClient();
 
@@ -56,18 +58,22 @@ export default function Router() {
   useEffect(() => {
     async function checkExistingUserSession() {
       try {
+        console.log("checking user session");
         const response = await axios.get(ServerURL + "/auth/validate-session", {
           withCredentials: true,
         });
-        if (response.data) {
-          setUser(response.data);
-        }
-        if (!response.data) {
+        if (!response.data || response.data instanceof Error) {
+          console.log("no user");
           setUser(null);
+        }
+        if (response.data && response.status === 200) {
+          console.log("user found");
+          setUser(response.data);
         }
         setLoading(false);
       } catch (err) {
-        console.error(err);
+        setUser(null);
+        setLoading(false);
       }
     }
     checkExistingUserSession();
@@ -110,6 +116,10 @@ export default function Router() {
         {
           path: "/sample/:id",
           element: <Sample />,
+        },
+        {
+          path: "/sample/edit/:id",
+          element: <EditSample />,
         },
         {
           path: "/profile/:id",

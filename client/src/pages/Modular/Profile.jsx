@@ -43,6 +43,14 @@ export default function Profile() {
     </div>
   );
 
+  const ownProfile = (
+    <div className="flex flex-row gap-5 justify-center items-center">
+      <button className="bg-primary-500 text-white rounded-md p-2">
+        Edit Profile
+      </button>
+    </div>
+  );
+
   return (
     <Container>
       <h2>Profile</h2>
@@ -58,10 +66,8 @@ export default function Profile() {
           <button>{profile?.followers.length} Followers</button>
           <button>{profile?.following.length} Following</button>
         </div>
-        {
-          //id !== profile?._id &&
-          othersProfile
-        }
+        {id !== profile?._id && othersProfile}
+        {id === profile?._id && ownProfile}
       </div>
     </Container>
   );

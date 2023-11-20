@@ -2,6 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import ServerURL from "../variables/URLs";
 import UserContext from "../contexts/UserContext";
 import axios from "axios";
+
+//Deprecated due to having bugs
+//Only needs to be done once, so a hook is redundant
+
 export default function useSession() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
