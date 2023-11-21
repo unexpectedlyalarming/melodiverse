@@ -14,6 +14,7 @@ export default function useApi({
 }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   async function request(optionalData = null) {
     try {
@@ -27,6 +28,7 @@ export default function useApi({
       );
       if (response.data) {
         setData(response.data);
+        setSuccess(true);
       } else if (response.data === false) {
         setData(false);
       } else {
@@ -39,5 +41,5 @@ export default function useApi({
     }
   }
 
-  return { data, setData, request, loading };
+  return { data, setData, request, loading, success };
 }

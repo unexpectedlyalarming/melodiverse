@@ -1,6 +1,7 @@
 import express from 'express';
 import { Response, NextFunction } from "express";
 import Request from "../interfaces/Request";
+import mongoose from 'mongoose';
 const router = express.Router();
 
 const Comment = require("../models/comment");
@@ -63,9 +64,13 @@ router.post("/", async (req: Request, res: Response) => {
 router.delete("/:commentId", async (req: Request, res: Response) => {
     try {
 
+        
+        const userId = new mongoose.Types.ObjectId(req.user?._id);
         const existingComment = await Comment.findById(req.params.commentId);
+        console.log(existingComment.userId);
+        console.log(userId);
         if (!existingComment) return res.status(400).send("Comment does not exist.");
-        if (existingComment.userId !== req.user?._id) return res.status(400).send("User is not authorized to delete this comment.");
+        if (existingComment.userId.toString() !== userId.toString()) return res.status(400).send("User is not authorized to delete this comment.");
 
         const deletedComment = await Comment.deleteOne({ _id: req.params.commentId });
         res.status(200).json(deletedComment);

@@ -57,13 +57,25 @@ export default function CommentsContainer() {
     }
   }
 
+  async function deleteProp(commentId) {
+    try {
+      queryClient.setQueryData(["comments"], (old) =>
+        old.filter((comment) => comment._id !== commentId)
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   if (status === "loading" || status === "pending")
     return <div>Loading...</div>;
 
   if (error) return <div>Error fetching data</div>;
 
   const commentsList = comments.map((comment) => {
-    return <Comment key={comment._id} comment={comment} />;
+    return (
+      <Comment key={comment._id} comment={comment} deleteProp={deleteProp} />
+    );
   });
 
   return (
