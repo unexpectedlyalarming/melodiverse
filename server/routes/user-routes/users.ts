@@ -63,7 +63,7 @@ router.get("/group/:group", async (req: Request, res: Response) => {
     }
 });
 
-//Update user (Can update everything except username, email, and password)
+//Update user (just for bio and avatar)
 
 router.patch("/:id", upload.single("avatar"), async (req: Request, res: Response) => {
     try {
@@ -74,7 +74,7 @@ router.patch("/:id", upload.single("avatar"), async (req: Request, res: Response
             return res.status(400).json({ message: "User does not exist" });
         }
 
-        if (existingUser._id !== userId) {
+        if (existingUser._id.toString() !== userId?.toString()) {
             return res.status(400).json({ message: "User does not own account" });
         }
 

@@ -61,9 +61,21 @@ export default function EditSample() {
     method: "get",
   });
 
-  const { data: newSample, request: editSample } = useApi({
+  const {
+    data: newSample,
+    request: editSample,
+    success,
+  } = useApi({
     url: `/samples/${id}`,
     method: "patch",
+    body: {
+      title,
+      description,
+      bpm: Number(bpm),
+      key,
+      genre,
+      tags,
+    },
   });
 
   useEffect(() => {
@@ -71,10 +83,10 @@ export default function EditSample() {
   }, []);
 
   useEffect(() => {
-    if (newSample) {
+    if (success) {
       navigate(`/sample/${id}`);
     }
-  }, [sample]);
+  }, [newSample]);
 
   if (loading) return <p>Loading...</p>;
 

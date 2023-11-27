@@ -28,6 +28,7 @@ import Inbox from "./pages/Inbox";
 import axios from "axios";
 import ServerURL from "./variables/URLs";
 import { UserProvider } from "./contexts/UserContext";
+import EditProfile from "./pages/Modular/EditProfile";
 
 const queryClient = new QueryClient();
 
@@ -123,6 +124,10 @@ export default function Router() {
         {
           path: "/profile/:id",
           element: <Profile />,
+        },
+        {
+          path: "/profile/edit/:id",
+          element: <EditProfile />,
         },
         {
           path: "/inbox",
