@@ -17,6 +17,11 @@ export default function CreateGroup() {
       groupDescription,
       logo: file,
     },
+    options: {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
   });
 
   if (hidden) {
@@ -60,8 +65,7 @@ export default function CreateGroup() {
           type="file"
           name="logo"
           id="logo"
-          value={file}
-          onChange={(e) => setFile(e.target.value)}
+          onChange={(e) => setFile(e.target.files[0])}
         />
 
         <button type="submit">Submit</button>

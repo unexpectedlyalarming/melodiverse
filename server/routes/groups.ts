@@ -6,6 +6,7 @@ const Group = require("../models/group");
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
 
+
 //Set up multer
 
 const storage: StorageEngine = multer.diskStorage({
@@ -23,7 +24,26 @@ const upload = multer({ storage: storage });
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const groups = await Group.find();
+        const groups = await Group.aggregate([
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "members",
+                    foreignField: "_id",
+                    as: "members",
+                },
+            },
+        {
+            $project: {
+                groupName: 1,
+                groupDescription: 1,
+                logo: 1,
+                adminId: 1,
+
+                members: "$members._id",
+            },
+        }
+        ]);
         res.status(200).json(groups);
     } catch (err: any) {
         res.status(500).json({ message: err });
@@ -45,6 +65,11 @@ router.get("/:groupId", async (req: Request, res: Response) => {
 
 router.post("/", upload.single("logo"), async (req: Request, res: Response) => {
     try {
+        const userId = req.user?._id;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User not found" });
+        }
 
         if (!req.file) {
             return res.status(400).json({ message: "No logo provided" });
@@ -56,8 +81,98 @@ router.post("/", upload.single("logo"), async (req: Request, res: Response) => {
             groupName: req.body.groupName,
             groupDescription: req.body.groupDescription,
             logo,
+            adminId: userId,
+            members: [userId],
         });
+
         await group.save();
+
+        
+
+
+        res.status(200).json(group);
+    } catch (err: any) {
+        res.status(500).json({ message: err });
+    }
+});
+
+//Join group
+
+router.patch("/:groupId/join", async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?._id;
+        const groupId = req.params.groupId;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        if (!groupId) {
+            return res.status(400).json({ message: "Group not found" });
+        }
+
+        const group = await Group.findById(groupId);
+
+        if (!group) {
+            return res.status(400).json({ message: "Group not found" });
+        }
+
+        //Check if user is already in group
+
+        if (group.members.includes(userId)) {
+            return res.status(400).json({ message: "User is already in group" });
+        }
+
+        //Add user to groups members array
+
+        group.members.push(userId);
+        await group.save();
+
+
+
+        res.status(200).json(group);
+    } catch (err: any) {
+        res.status(500).json({ message: err });
+    }
+});
+
+//Leave group
+
+router.patch("/:groupId/leave", async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?._id;
+        const groupId = req.params.groupId;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        if (!groupId) {
+            return res.status(400).json({ message: "Group not found" });
+        }
+
+        const group = await Group.findById(groupId);
+
+        if (!group) {
+            return res.status(400).json({ message: "Group not found" });
+        }
+
+        //Check if user is already in group
+
+
+
+        if (!group.members.includes(userId)) {
+            return res.status(400).json({ message: "User is not in group" });
+        }
+
+        //Remove user from groups members array
+
+        group.members = group.members.filter((member: string) => member !== userId);
+
+        await group.save();
+
+
+
         res.status(200).json(group);
     } catch (err: any) {
         res.status(500).json({ message: err });
