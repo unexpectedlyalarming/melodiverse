@@ -373,7 +373,66 @@ router.get("/sort/views", async (req: Request, res: Response) => {
 
 router.get("/sort/likes", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find().populate("likes").sort({ likes: -1 });
+    const samples = await Sample.aggregate([
+      {
+
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+
+        $lookup: {
+          from: "downloads",
+          localField: "downloads",
+          foreignField: "_id",
+          as: "downloads",
+        }
+      },
+      {
+        $lookup: {
+          from: "views",
+          localField: "views",
+          foreignField: "_id",
+          as: "views",
+        }
+      },
+      {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "likes",
+        }
+      },
+      
+      {
+        $project: {
+          "username": "$user.username",
+          "userId": 1,
+          "title": 1,
+          "description": 1,
+          "sample": 1,
+          "format": 1,
+          "bpm": 1,
+          "key": 1,
+          "genre": 1,
+          "duration": 1,
+          "downloads": { $size: "$downloads" },
+          "likes": { $size: "$likes" },
+          "tags": 1,
+          "views": { $size: "$views" },
+          "_id": 1,
+          "date": 1,
+        },
+      },
+      {
+        $sort: { likes: -1 },
+      }
+    ]);
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -505,10 +564,77 @@ router.get("/tag/:tag", async (req: Request, res: Response) => {
 
 // Get samples by genre
 
-router.get("/genre/:genre", async (req: Request, res: Response) => {
+router.get("/genre/:genre/:sort", async (req: Request, res: Response) => {
   try {
     const genre = decodeURI(req.params.genre)
-    const samples = await Sample.find({ genre }).sort({ date: -1 });
+    // const samples = await Sample.find({ genre }).sort({ date: -1 });
+    const sort = req.params.sort ? req.params.sort : "date";
+    const samples = await Sample.aggregate([
+      {
+
+        $match: { genre },
+      },
+        {
+  
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+  
+          $lookup: {
+            from: "downloads",
+            localField: "downloads",
+            foreignField: "_id",
+            as: "downloads",
+          }
+        },
+        {
+          $lookup: {
+            from: "views",
+            localField: "views",
+            foreignField: "_id",
+            as: "views",
+          }
+        },
+        {
+          $lookup: {
+            from: "likes",
+            localField: "_id",
+            foreignField: "itemId",
+            as: "likes",
+          }
+        },
+        
+        {
+          $project: {
+            "username": "$user.username",
+            "userId": 1,
+            "title": 1,
+            "description": 1,
+            "sample": 1,
+            "format": 1,
+            "bpm": 1,
+            "key": 1,
+            "genre": 1,
+            "duration": 1,
+            "downloads": { $size: "$downloads" },
+            "likes": { $size: "$likes" },
+            "tags": 1,
+            "views": { $size: "$views" },
+            "_id": 1,
+            "date": 1,
+          },
+        },
+        {
+
+          $sort: { [sort]: -1 },
+        }
+
+    ]);
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -518,10 +644,77 @@ router.get("/genre/:genre", async (req: Request, res: Response) => {
 
 // Get samples by key
 
-router.get("/key/:key", async (req: Request, res: Response) => {
+router.get("/key/:key/:sort", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find({ key: req.params.key }).sort({ date: -1 });
-    res.status(200).json(samples );
+    const sort = req.params.sort ? req.params.sort : "date";
+    const key = decodeURI(req.params.key);
+    const samples = await Sample.aggregate([
+      {
+
+        $match: { key },
+      },
+        {
+  
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+  
+          $lookup: {
+            from: "downloads",
+            localField: "downloads",
+            foreignField: "_id",
+            as: "downloads",
+          }
+        },
+        {
+          $lookup: {
+            from: "views",
+            localField: "views",
+            foreignField: "_id",
+            as: "views",
+          }
+        },
+        {
+          $lookup: {
+            from: "likes",
+            localField: "_id",
+            foreignField: "itemId",
+            as: "likes",
+          }
+        },
+        
+        {
+          $project: {
+            "username": "$user.username",
+            "userId": 1,
+            "title": 1,
+            "description": 1,
+            "sample": 1,
+            "format": 1,
+            "bpm": 1,
+            "key": 1,
+            "genre": 1,
+            "duration": 1,
+            "downloads": { $size: "$downloads" },
+            "likes": { $size: "$likes" },
+            "tags": 1,
+            "views": { $size: "$views" },
+            "_id": 1,
+            "date": 1,
+          },
+        },
+        {
+
+          $sort: { [sort]: -1 },
+        }
+
+    ]);
+        res.status(200).json(samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -530,13 +723,79 @@ router.get("/key/:key", async (req: Request, res: Response) => {
 
 // Get samples by bpm range
 
-router.get("/bpm/:bpm", async (req: Request, res: Response) => {
+router.get("/bpm/:bpm/:sort", async (req: Request, res: Response) => {
   try {
     const bpm = req.params.bpm.split("-");
-    const lower = bpm[0];
-    const upper = bpm[1];
+    const lower = Number(bpm[0]);
+    const upper = Number(bpm[1]);
+    const sort = req.params.sort ? req.params.sort : "date";
     
-    const samples = await Sample.find({ bpm: { $gte: lower, $lte: upper } }).sort({ date: -1 });
+    const samples = await Sample.aggregate([
+      {
+        $match: { bpm: { $gte: lower, $lte: upper } },
+      },
+
+          {
+    
+            $lookup: {
+              from: "users",
+              localField: "userId",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+    
+            $lookup: {
+              from: "downloads",
+              localField: "downloads",
+              foreignField: "_id",
+              as: "downloads",
+            }
+          },
+          {
+            $lookup: {
+              from: "views",
+              localField: "views",
+              foreignField: "_id",
+              as: "views",
+            }
+          },
+          {
+            $lookup: {
+              from: "likes",
+              localField: "_id",
+              foreignField: "itemId",
+              as: "likes",
+            }
+          },
+          
+          {
+            $project: {
+              "username": "$user.username",
+              "userId": 1,
+              "title": 1,
+              "description": 1,
+              "sample": 1,
+              "format": 1,
+              "bpm": 1,
+              "key": 1,
+              "genre": 1,
+              "duration": 1,
+              "downloads": { $size: "$downloads" },
+              "likes": { $size: "$likes" },
+              "tags": 1,
+              "views": { $size: "$views" },
+              "_id": 1,
+              "date": 1,
+            },
+          },
+          {
+  
+            $sort: { [sort]: -1 },
+          }
+  
+      ]);
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -546,14 +805,14 @@ router.get("/bpm/:bpm", async (req: Request, res: Response) => {
 
 //Get samples by range of bpm
 
-router.get("/bpm/:min/:max", async (req: Request, res: Response) => {
-  try {
-    const samples = await Sample.find({ bpm: { $gte: req.params.min, $lte: req.params.max } }).sort({ date: -1 });
-    res.status(200).json( samples );
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
-  }
-});
+// router.get("/bpm/:min/:max", async (req: Request, res: Response) => {
+//   try {
+//     const samples = await Sample.find({ bpm: { $gte: req.params.min, $lte: req.params.max } }).sort({ date: -1 });
+//     res.status(200).json( samples );
+//   } catch (err: any) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
 
 
 //Download file by sample id

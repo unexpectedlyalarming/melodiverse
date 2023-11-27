@@ -22,6 +22,18 @@ export default function Samples() {
   useEffect(() => {
     getGenres();
   }, []);
+
+  const defaultFilterValues = {
+    genre: genres && genres[0].genre,
+    key: "A",
+    bpm: "60-200",
+    none: "",
+  };
+
+  useEffect(() => {
+    setFilterValue(defaultFilterValues[filterKey]);
+  }, [filterKey]);
+
   if (loading) return <p>Loading...</p>;
 
   const genreOptions = genres.map((genre) => {

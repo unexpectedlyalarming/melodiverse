@@ -127,7 +127,6 @@ export default function AudioPlayer({ sample }) {
       console.error(err);
     }
   }
-  console.log(sample.userId, user);
 
   const ownerControls = (
     <>

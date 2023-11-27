@@ -4,12 +4,16 @@ import useApi from "../hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
+import { useDebounce } from "use-debounce";
 
 export default function SamplesContainer({
   sort,
   filterKey = "none",
   filterValue,
 }) {
+  const [debouncedFilterValue] = useDebounce(filterValue, 200);
+  const [debouncedSort] = useDebounce(sort, 200);
+
   const sortMethod = `sort/${sort}`;
   // const { request: getSamples, loading } = useApi({
   //   url: "/samples/" + sortMethod,
@@ -22,7 +26,7 @@ export default function SamplesContainer({
       if (filterKey === "none") {
         url += sortMethod;
       } else if (["genre", "key", "bpm"].includes(filterKey)) {
-        url += filterKey + "/" + filterValue;
+        url += filterKey + "/" + filterValue + "/" + sort;
       }
 
       const res = await axios.get(url, { withCredentials: true });
@@ -34,7 +38,7 @@ export default function SamplesContainer({
 
   useEffect(() => {
     refetch();
-  }, [sort, filterValue, filterKey]);
+  }, [debouncedFilterValue, debouncedSort, filterKey]);
 
   // useEffect(() => {
   //   getSamples();
@@ -45,7 +49,7 @@ export default function SamplesContainer({
     status,
     refetch,
   } = useQuery({
-    queryKey: ["samples", filterKey, filterValue],
+    queryKey: ["samples", filterKey, debouncedFilterValue, debouncedSort],
     queryFn: fetchSamples,
   });
 
