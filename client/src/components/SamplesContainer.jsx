@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
 
-export default function SamplesContainer({ sort, filterKey, filterValue }) {
+export default function SamplesContainer({
+  sort,
+  filterKey = "none",
+  filterValue,
+}) {
   const sortMethod = `sort/${sort}`;
   // const { request: getSamples, loading } = useApi({
   //   url: "/samples/" + sortMethod,
@@ -13,9 +17,15 @@ export default function SamplesContainer({ sort, filterKey, filterValue }) {
 
   async function fetchSamples() {
     try {
-      const res = await axios.get(ServerURL + "/samples/" + sortMethod, {
-        withCredentials: true,
-      });
+      let url = ServerURL + "/samples/";
+
+      if (filterKey === "none") {
+        url += sortMethod;
+      } else if (["genre", "key", "bpm"].includes(filterKey)) {
+        url += filterKey + "/" + filterValue;
+      }
+
+      const res = await axios.get(url, { withCredentials: true });
       return res.data;
     } catch (err) {
       console.error(err);
@@ -24,7 +34,7 @@ export default function SamplesContainer({ sort, filterKey, filterValue }) {
 
   useEffect(() => {
     refetch();
-  }, [sort]);
+  }, [sort, filterValue, filterKey]);
 
   // useEffect(() => {
   //   getSamples();
@@ -35,7 +45,7 @@ export default function SamplesContainer({ sort, filterKey, filterValue }) {
     status,
     refetch,
   } = useQuery({
-    queryKey: ["samples"],
+    queryKey: ["samples", filterKey, filterValue],
     queryFn: fetchSamples,
   });
 

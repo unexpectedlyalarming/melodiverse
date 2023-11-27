@@ -63,7 +63,7 @@ export default function CreateSample() {
     genres &&
     genres.map((genre) => {
       return (
-        <option key={genre._id} value={genre.gebre}>
+        <option key={genre._id} value={genre.genre}>
           {genre.genre}
         </option>
       );

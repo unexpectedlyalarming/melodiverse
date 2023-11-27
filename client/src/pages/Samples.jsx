@@ -5,7 +5,7 @@ import useApi from "../hooks/useApi";
 
 export default function Samples() {
   const [sort, setSort] = useState("date");
-  const [filterKey, setFilterKey] = useState("genre");
+  const [filterKey, setFilterKey] = useState("none");
   const [filterValue, setFilterValue] = useState("");
   const [fromSlider, setFromSlider] = useState(60);
   const [toSlider, setToSlider] = useState(200);
@@ -99,6 +99,7 @@ export default function Samples() {
             id="filter"
             onChange={(e) => setFilterKey(e.target.value)}
           >
+            <option value="none">None</option>
             <option value="genre">Genre</option>
             <option value="key">Key</option>
             <option value="bpm">BPM</option>

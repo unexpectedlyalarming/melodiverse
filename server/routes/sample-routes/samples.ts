@@ -70,7 +70,7 @@ router.post("/", upload.single("sample"), checkFile, async (req: Request, res: R
       return res.status(400).json({ message: "Key is not valid" });
     }
 
-    const genre: string = req.body.genre;
+    const genre = req.body.genre;
     const tags: string[] = req.body.tags;
 
     if (!req.file) {
@@ -507,7 +507,8 @@ router.get("/tag/:tag", async (req: Request, res: Response) => {
 
 router.get("/genre/:genre", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find({ genre: req.params.genre }).sort({ date: -1 });
+    const genre = decodeURI(req.params.genre)
+    const samples = await Sample.find({ genre }).sort({ date: -1 });
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -527,11 +528,15 @@ router.get("/key/:key", async (req: Request, res: Response) => {
 }
 );
 
-// Get samples by bpm
+// Get samples by bpm range
 
 router.get("/bpm/:bpm", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find({ bpm: req.params.bpm }).sort({ date: -1 });
+    const bpm = req.params.bpm.split("-");
+    const lower = bpm[0];
+    const upper = bpm[1];
+    
+    const samples = await Sample.find({ bpm: { $gte: lower, $lte: upper } }).sort({ date: -1 });
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });
