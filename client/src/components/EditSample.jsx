@@ -1,19 +1,46 @@
 import React, { useEffect, useState } from "react";
-import Container from "./Container";
 import useApi from "../hooks/useApi";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Slider from "@radix-ui/react-slider";
 
-export default function CreateSample() {
-  const [hidden, setHidden] = useState(true);
+export default function EditSample() {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [file, setFile] = useState("");
+  const { data: sample, request: getSample } = useApi({
+    url: `/samples/${id}`,
+    method: "get",
+  });
+
   const [bpm, setBpm] = useState("");
   const [key, setKey] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [genre, setGenre] = useState("");
   const [tags, setTags] = useState("");
   const [tagInput, setTagInput] = useState("");
+
+  useEffect(() => {
+    getSample();
+  }, []);
+
+  useEffect(() => {
+    if (sample) {
+      setTitle(sample.title);
+      setDescription(sample.description);
+      setBpm(sample.bpm);
+      setKey(sample.key);
+      setGenre(sample.genre);
+
+      const tagsArr = sample.tags;
+      const newTags = tagsArr.map((tag) => {
+        return tag.trim();
+      });
+      if (!newTags) setTags("");
+      setTags(newTags);
+    }
+  }, [sample]);
 
   const handleTagInput = (e) => {
     setTagInput(e.target.value);
@@ -25,25 +52,6 @@ export default function CreateSample() {
     setTags(newTags);
   };
 
-  const { data: sample, request: createSample } = useApi({
-    url: "/samples",
-    method: "post",
-    options: {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
-    body: {
-      title,
-      description,
-      sample: file,
-      bpm,
-      key,
-      genre,
-      tags,
-    },
-  });
-
   const {
     data: genres,
     request: getGenres,
@@ -53,9 +61,20 @@ export default function CreateSample() {
     method: "get",
   });
 
+  const { data: newSample, request: editSample } = useApi({
+    url: `/samples/${id}`,
+    method: "patch",
+  });
+
   useEffect(() => {
     getGenres();
   }, []);
+
+  useEffect(() => {
+    if (newSample) {
+      navigate(`/sample/${id}`);
+    }
+  }, [sample]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -74,22 +93,13 @@ export default function CreateSample() {
         return <p key={tag}>#{tag}</p>;
       })
     : null;
-  if (hidden) {
-    return (
-      <>
-        <button onClick={() => setHidden(!hidden)}>Create Sample</button>
-      </>
-    );
-  }
 
   return (
     <>
-      <button onClick={() => setHidden(!hidden)}>Close</button>
-
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createSample();
+          editSample();
         }}
         className="flex flex-col p-2 gap-5 justify-center items-center"
       >
@@ -108,17 +118,10 @@ export default function CreateSample() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <label htmlFor="file">File</label>
-        <input
-          type="file"
-          name="file"
-          id="file"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
         <label htmlFor="bpm">BPM</label>
         <Slider.Root
           className="relative flex items-center select-none touch-none w-[200px] h-5"
-          defaultValue={[60]}
+          defaultValue={[bpm]}
           onValueChange={(value) => setBpm(value)}
           max={200}
           min={60}

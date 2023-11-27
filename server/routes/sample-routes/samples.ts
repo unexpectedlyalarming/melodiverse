@@ -145,11 +145,11 @@ try {
   if (!existingSample) {
     return res.status(400).json({ message: "Sample does not exist" });
   }
-  if (existingSample.userId !== userId) {
+  if (existingSample.userId.toString() !== userId.toString()) {
     return res.status(400).json({ message: "User does not own sample" });
   }
 
-  await existingSample.remove();
+  await Sample.findByIdAndDelete(req.params.id);
   res.status(200).json({ message: "Sample deleted" });
 
 

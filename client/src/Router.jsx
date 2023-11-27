@@ -14,7 +14,7 @@ import Samples from "./pages/Samples";
 import Groups from "./pages/Groups";
 import About from "./pages/About";
 import Sample from "./pages/Modular/Sample";
-import EditSample from "./pages/Modular/EditSample";
+import EditSample from "./components/EditSample";
 import Profile from "./pages/Modular/Profile";
 import Dashboard from "./pages/Dashboard";
 import DashboardHome from "./components/Dashboard/DashboardHome";
@@ -28,7 +28,6 @@ import Inbox from "./pages/Inbox";
 import axios from "axios";
 import ServerURL from "./variables/URLs";
 import { UserProvider } from "./contexts/UserContext";
-import { set } from "mongoose";
 
 const queryClient = new QueryClient();
 
