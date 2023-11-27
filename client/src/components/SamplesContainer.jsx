@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
 
-export default function SamplesContainer({ sort }) {
+export default function SamplesContainer({ sort, filterKey, filterValue }) {
   const sortMethod = `sort/${sort}`;
   // const { request: getSamples, loading } = useApi({
   //   url: "/samples/" + sortMethod,

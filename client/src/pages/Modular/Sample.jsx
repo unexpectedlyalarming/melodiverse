@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AudioPlayer from "../../components/AudioPlayer";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import axios from "axios";
+
 import ServerURL from "../../variables/URLs";
 import CommentsContainer from "../../components/Comments/CommentsContainer";
 export default function Sample() {
