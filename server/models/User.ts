@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-//Define user schema. username, email, password, avatar, bio, followers, following, samples, groups, samplepacks, likes, comments, notifications, date
+//Define user schema. username, password, avatar, bio, followers, following, samples, groups, samplepacks, likes, comments, notifications, date
 
 const UserSchema = new mongoose.Schema({
   username: {

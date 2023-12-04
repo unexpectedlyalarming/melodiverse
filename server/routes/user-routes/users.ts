@@ -4,6 +4,7 @@ const User = require("../../models/User");
 import { Response, NextFunction } from "express";
 import Request from "../../interfaces/Request";
 import multer, { StorageEngine } from "multer";
+import mongoose from "mongoose";
 
 const storage: StorageEngine = multer.diskStorage({
     destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
@@ -33,8 +34,63 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.params.id);
-        res.status(200).json( user );
+        // const user = await User.findById(req.params.id)
+        // .populate("followers")
+        // .populate("following")
+        // .populate("samples")
+        // .populate("groups")
+        // .select("-password");
+        const id = new mongoose.Types.ObjectId(req.params.id);
+        //new pipeline
+        const user = await User.aggregate([
+            { $match: { _id: id } },
+            {
+              $lookup: {
+                from: "followers",
+                localField: "_id",
+                foreignField: "receiverId",
+                as: "followers",
+              },
+            },
+            {
+              $lookup: {
+                from: "followers",
+                localField: "_id",
+                foreignField: "senderId",
+                as: "following",
+              },
+            },
+            {
+              $lookup: {
+                from: "samples",
+                localField: "_id",
+                foreignField: "userId",
+                as: "samples",
+              },
+            },
+            {
+              $lookup: {
+                from: "groups",
+                localField: "_id",
+                foreignField: "members",
+                as: "groups",
+              },
+            },
+            { $project: {
+                username: 1,
+                bio: 1,
+                avatar: 1,
+                followers: ({ $size: "$followers" }),
+                following: ({ $size: "$following" }),
+                samples: 1,
+                groups: 1,
+                date: 1,
+                _id: 1,
+
+             },
+            },
+          ]);
+        res.status(200).json( user[0] );
     } catch (err: any) {
         res.status(500).json({ message: err.message });
     }

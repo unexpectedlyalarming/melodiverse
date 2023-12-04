@@ -145,7 +145,7 @@ export default function AudioPlayer({ sample }) {
         {sample.title}
       </Link>
       <div className="sample-info flex flex-row place-content-around items-center gap-5">
-        <Link to={`/user/${sample.userId}`} className="text-white text-sm">
+        <Link to={`/profile/${sample.userId}`} className="text-white text-sm">
           {sample.username}
         </Link>
         <time className="text-white text-sm">

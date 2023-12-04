@@ -62,5 +62,26 @@ router.post("/:id", async (req: Request, res: Response) => {
     }
 })
 
+//Check if user is following
+
+router.get("/check/:id", async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?._id;
+        const receiverId = req.params.id;
+        const following = await Follower.findOne({ senderId: userId, receiverId });
+
+        if (following) {
+            return res.status(200).json(true);
+        }
+
+        res.status(200).json(false);
+
+    }
+    catch (err: any) {
+        res.status(500).json({ message: err.message });
+    }
+}
+)
+
 
 module.exports = router;

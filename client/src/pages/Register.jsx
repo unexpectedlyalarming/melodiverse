@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../components/Container";
 import useApi from "../hooks/useApi";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
 
-  const { data, request } = useApi({
+  const { data, request, success } = useApi({
     url: "/auth/register",
     method: "post",
     body: {
@@ -18,18 +20,22 @@ export default function Register() {
     },
   });
 
+  useEffect(() => {
+    if (success) {
+      navigate("/login");
+    }
+  }, [success]);
+
   async function handleSubmit(e) {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-      return;
-    }
     await request();
-    if (data) {
-      setMessage(data.message);
-    }
   }
 
+  useEffect(() => {
+    if (data) {
+      setMessage(data?.message);
+    }
+  }, [data]);
   return (
     <Container>
       <h2>Register</h2>

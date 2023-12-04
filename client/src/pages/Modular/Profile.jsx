@@ -13,6 +13,14 @@ export default function Profile() {
     url: `/users/${id}`,
   });
 
+  const { data: following, request: getFollowing } = useApi({
+    url: `/followers/check/${id}`,
+  });
+
+  useEffect(() => {
+    getProfile();
+  }, [following]);
+
   useEffect(() => {
     getProfile();
   }, []);
@@ -21,6 +29,10 @@ export default function Profile() {
     url: `/followers/${id}`,
     method: "post",
   });
+
+  useEffect(() => {
+    getFollowing();
+  }, [follower]);
 
   async function handleFollow(e) {
     e.preventDefault();
@@ -38,7 +50,7 @@ export default function Profile() {
         className="bg-primary-500 text-white rounded-md p-2"
         onClick={handleFollow}
       >
-        {follower ? "Unfollow" : "Follow"}
+        {following ? "Unfollow" : "Follow"}
       </button>
       <button className="bg-primary-500 text-white rounded-md p-2">
         Message
@@ -62,14 +74,14 @@ export default function Profile() {
       <div className="flex flex-col gap-5 justify-center items-center">
         <img
           alt={profile?.username}
-          src={profile?.avatar.length > 0 ? profile.avatar : "/img/avatar.png"}
+          src={profile?.avatar ? profile.avatar : "/img/avatar.png"}
           className="object-contain w-40 h-40 rounded-full"
         />
         <p>{profile?.username}</p>
         <p>{profile?.bio}</p>
         <div className="flex flex-row gap-5 justify-center items-center">
-          <button>{profile?.followers.length} Followers</button>
-          <button>{profile?.following.length} Following</button>
+          <button>{profile?.followers} Followers</button>
+          <button>{profile?.following} Following</button>
         </div>
         {user?._id !== profile?._id && othersProfile}
         {user?._id === profile?._id && ownProfile}
