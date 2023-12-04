@@ -9,6 +9,8 @@ export default function Samples() {
   const [filterValue, setFilterValue] = useState("");
   const [fromSlider, setFromSlider] = useState(60);
   const [toSlider, setToSlider] = useState(200);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
 
   const {
     data: genres,
@@ -132,12 +134,49 @@ export default function Samples() {
           )}
           {filterKey === "bpm" && bpmOptions}
         </div>
+        <div className="limit">
+          <label htmlFor="limit">Limit</label>
+          <select
+            name="limit"
+            id="limit"
+            onChange={(e) => setLimit(e.target.value)}
+          >
+            <option value="10" selected>
+              10
+            </option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
       </div>
       <SamplesContainer
         sort={sort}
         filterValue={filterValue}
         filterKey={filterKey}
+        limit={limit}
+        page={page}
       />
+      <div className="page">
+        <p>Page {page} of 10</p>
+        <div className="page-buttons">
+          <button
+            className="previous"
+            onClick={() => {
+              page > 1 ? setPage(page - 1) : null;
+            }}
+          >
+            Previous
+          </button>
+          <button
+            className="next"
+            onClick={() => {
+              setPage(page + 1);
+            }}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </Container>
   );
 }

@@ -158,10 +158,14 @@ try {
 }
 });
 
-// Get all samples, sort by date
+// Get all samples, sort by date, limit by number
 
-router.get("/sort/date", async (req: Request, res: Response) => {
+router.get("/sort/date/:page/:limit", async (req: Request, res: Response) => {
   try {
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
     //Add username to sample and sort by date
     const samples = await Sample.aggregate([
       {
@@ -198,6 +202,7 @@ router.get("/sort/date", async (req: Request, res: Response) => {
           as: "likes",
         }
       },
+
       
       {
         $project: {
@@ -221,6 +226,12 @@ router.get("/sort/date", async (req: Request, res: Response) => {
       },
       {
         $sort: { date: -1 },
+      },
+      {
+        $skip: start,
+      },
+      {
+        $limit: limit,
       }
     ]);
     res.status(200).json( samples );
@@ -231,8 +242,12 @@ router.get("/sort/date", async (req: Request, res: Response) => {
 
 //Get all samples, sort by downloads
 
-router.get("/sort/downloads", async (req: Request, res: Response) => {
+router.get("/sort/downloads/:page/:limit", async (req: Request, res: Response) => {
   try {
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
     const samples = await Sample.aggregate([
       {
 
@@ -291,6 +306,12 @@ router.get("/sort/downloads", async (req: Request, res: Response) => {
       },
       {
         $sort: { downloads: -1 },
+      },
+      {
+        $skip: start,
+      },
+      {
+        $limit: limit,
       }
     ]);
     res.status(200).json( samples );
@@ -301,8 +322,12 @@ router.get("/sort/downloads", async (req: Request, res: Response) => {
 
 //Get all samples, sort by views
 
-router.get("/sort/views", async (req: Request, res: Response) => {
+router.get("/sort/views/:page/:limit", async (req: Request, res: Response) => {
   try {
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
     const samples = await Sample.aggregate([
       {
 
@@ -361,6 +386,12 @@ router.get("/sort/views", async (req: Request, res: Response) => {
       },
       {
         $sort: { views: -1 },
+      },
+      {
+        $skip: start,
+      },
+      {
+        $limit: limit,
       }
     ]);
     res.status(200).json( samples );
@@ -371,8 +402,12 @@ router.get("/sort/views", async (req: Request, res: Response) => {
 
 // Get all samples, sort by likes
 
-router.get("/sort/likes", async (req: Request, res: Response) => {
+router.get("/sort/likes/:page/:limit", async (req: Request, res: Response) => {
   try {
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
     const samples = await Sample.aggregate([
       {
 
@@ -431,6 +466,12 @@ router.get("/sort/likes", async (req: Request, res: Response) => {
       },
       {
         $sort: { likes: -1 },
+      },
+      {
+        $skip: start,
+      },
+      {
+        $limit: limit,
       }
     ]);
     res.status(200).json( samples );
@@ -564,11 +605,15 @@ router.get("/tag/:tag", async (req: Request, res: Response) => {
 
 // Get samples by genre
 
-router.get("/genre/:genre/:sort", async (req: Request, res: Response) => {
+router.get("/genre/:genre/:sort/:page/:limit", async (req: Request, res: Response) => {
   try {
     const genre = decodeURI(req.params.genre)
     // const samples = await Sample.find({ genre }).sort({ date: -1 });
     const sort = req.params.sort ? req.params.sort : "date";
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
     const samples = await Sample.aggregate([
       {
 
@@ -630,10 +675,14 @@ router.get("/genre/:genre/:sort", async (req: Request, res: Response) => {
           },
         },
         {
-
           $sort: { [sort]: -1 },
+        },
+        {
+          $skip: start,
+        },
+        {
+          $limit: limit,
         }
-
     ]);
     res.status(200).json( samples );
   } catch (err: any) {
@@ -644,10 +693,15 @@ router.get("/genre/:genre/:sort", async (req: Request, res: Response) => {
 
 // Get samples by key
 
-router.get("/key/:key/:sort", async (req: Request, res: Response) => {
+router.get("/key/:key/:sort/:page/:limit", async (req: Request, res: Response) => {
   try {
     const sort = req.params.sort ? req.params.sort : "date";
     const key = decodeURI(req.params.key);
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
+
     const samples = await Sample.aggregate([
       {
 
@@ -711,6 +765,12 @@ router.get("/key/:key/:sort", async (req: Request, res: Response) => {
         {
 
           $sort: { [sort]: -1 },
+        },
+        {
+          $skip: start,
+        },
+        {
+          $limit: limit,
         }
 
     ]);
@@ -723,12 +783,17 @@ router.get("/key/:key/:sort", async (req: Request, res: Response) => {
 
 // Get samples by bpm range
 
-router.get("/bpm/:bpm/:sort", async (req: Request, res: Response) => {
+router.get("/bpm/:bpm/:sort/:page/:limit", async (req: Request, res: Response) => {
   try {
     const bpm = req.params.bpm.split("-");
     const lower = Number(bpm[0]);
     const upper = Number(bpm[1]);
     const sort = req.params.sort ? req.params.sort : "date";
+
+    const page = req.params.page ? Number(req.params.page) : 1;
+    const limit = req.params.limit ? Number(req.params.limit) : 10;
+    const end = page * limit;
+    const start = end - limit;
     
     const samples = await Sample.aggregate([
       {
@@ -793,6 +858,12 @@ router.get("/bpm/:bpm/:sort", async (req: Request, res: Response) => {
           {
   
             $sort: { [sort]: -1 },
+          },
+          {
+            $skip: start,
+          },
+          {
+            $limit: limit,
           }
   
       ]);

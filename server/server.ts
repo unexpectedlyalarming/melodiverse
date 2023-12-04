@@ -76,7 +76,7 @@ app.use(cookieParser());
 
 app.use(helmet());
 
-//Handle errors with grace (make it not give me a headache)
+// Make errors readable
 
 const pe = new PrettyError();
 pe.start();
@@ -86,7 +86,7 @@ pe.start();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//Set up routes
+// Routes
 
 const authRoute = require("./routes/auth");
 

@@ -140,7 +140,7 @@ export default function AudioPlayer({ sample }) {
   );
 
   return (
-    <div className=" text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
+    <div className=" sample-container text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
       <Link to={`/sample/${sample._id}`} className="text-white text-md">
         {sample.title}
       </Link>

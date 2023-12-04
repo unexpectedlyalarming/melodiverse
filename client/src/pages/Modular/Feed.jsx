@@ -13,19 +13,19 @@ export default function Feed() {
       </div>
       <h2>Latest</h2>
       <div className="feed-sample">
-        <SamplesContainer sort="date" />
+        <SamplesContainer sort="date" page="1" limit="10" />
       </div>
 
       <h2>Popular</h2>
 
       <div className="feed-sample flex flex-row items-center">
-        <SamplesContainer sort="likes" />
+        <SamplesContainer sort="likes" page="1" limit="10" />
       </div>
 
       <h2>Following</h2>
 
       <div className="feed-sample">
-        <SamplesContainer sort="views" />
+        <SamplesContainer sort="views" page="1" limit="10" />
       </div>
     </Container>
   );

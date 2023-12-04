@@ -10,11 +10,14 @@ export default function SamplesContainer({
   sort,
   filterKey = "none",
   filterValue,
+  limit,
+  page,
 }) {
   const [debouncedFilterValue] = useDebounce(filterValue, 200);
   const [debouncedSort] = useDebounce(sort, 200);
 
-  const sortMethod = `sort/${sort}`;
+  const sortMethod = `sort/${sort}/`;
+
   // const { request: getSamples, loading } = useApi({
   //   url: "/samples/" + sortMethod,
   // });
@@ -24,9 +27,10 @@ export default function SamplesContainer({
       let url = ServerURL + "/samples/";
 
       if (filterKey === "none") {
-        url += sortMethod;
+        url += sortMethod + page + "/" + limit;
       } else if (["genre", "key", "bpm"].includes(filterKey)) {
-        url += filterKey + "/" + filterValue + "/" + sort;
+        url +=
+          filterKey + "/" + filterValue + "/" + sort + "/" + page + "/" + limit;
       }
 
       const res = await axios.get(url, { withCredentials: true });
@@ -38,7 +42,7 @@ export default function SamplesContainer({
 
   useEffect(() => {
     refetch();
-  }, [debouncedFilterValue, debouncedSort, filterKey]);
+  }, [debouncedFilterValue, debouncedSort, filterKey, limit, page]);
 
   // useEffect(() => {
   //   getSamples();
@@ -49,7 +53,14 @@ export default function SamplesContainer({
     status,
     refetch,
   } = useQuery({
-    queryKey: ["samples", filterKey, debouncedFilterValue, debouncedSort],
+    queryKey: [
+      "samples",
+      filterKey,
+      debouncedFilterValue,
+      debouncedSort,
+      limit,
+      page,
+    ],
     queryFn: fetchSamples,
   });
 
