@@ -1,0 +1,10 @@
+.dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 1rem;
+  gap: 1rem;
+  min-width: 20rem;
+  max-width: 20rem;
+}

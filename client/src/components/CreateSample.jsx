@@ -95,9 +95,9 @@ export default function CreateSample() {
           e.preventDefault();
           createSample();
         }}
-        className="flex flex-col p-2 gap-5 justify-center items-center"
+        className="create-sample-form"
       >
-        <h1 className="text-3xl font-bold">Create Sample</h1>
+        <h1>Create Sample</h1>
         <label htmlFor="title">Title</label>
         <input
           type="text"
@@ -121,20 +121,17 @@ export default function CreateSample() {
         />
         <label htmlFor="bpm">BPM</label>
         <Slider.Root
-          className="relative flex items-center select-none touch-none w-[200px] h-5"
+          className="create-sample-slider"
           defaultValue={[60]}
           onValueChange={(value) => setBpm(value)}
           max={200}
           min={60}
           step={1}
         >
-          <Slider.Track className="bg-black relative grow rounded-full h-[3px]">
-            <Slider.Range className="absolute bg-white rounded-full h-full" />
+          <Slider.Track className="slider-track">
+            <Slider.Range className="slider-range" />
           </Slider.Track>
-          <Slider.Thumb
-            className="block w-5 h-5 bg-white shadow-[0_2px_10px] shadow-blackA4 rounded-[10px]  focus:outline-none "
-            aria-label="Volume"
-          />
+          <Slider.Thumb className="slider-thumb" aria-label="Volume" />
         </Slider.Root>
         <p>{bpm} bpm</p>
 

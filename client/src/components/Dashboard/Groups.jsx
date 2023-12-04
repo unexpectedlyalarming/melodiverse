@@ -4,7 +4,7 @@ import CreateGroup from "../CreateGroup";
 
 export default function DashboardGroups() {
   return (
-    <div className="flex flex-col  items-center p-5 gap-5 w-full ">
+    <div className="container ">
       <h2>Groups</h2>
       <CreateGroup />
       <GroupsContainer />

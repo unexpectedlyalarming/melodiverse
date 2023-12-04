@@ -60,6 +60,26 @@
   align-items: center;
   justify-content: center;
 }
+.create-sample-slider {
+  position: relative;
+  width: 20rem;
+  height: 1rem;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-sample-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 80%;
+  max-width: 1200px;
+}
 .slider-track {
   position: relative;
   width: 100%;

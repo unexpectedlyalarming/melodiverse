@@ -3,7 +3,7 @@ import Container from "../../components/Container";
 import { Link, useParams } from "react-router-dom";
 import useApi from "../../hooks/useApi";
 import { UserContext } from "../../contexts/UserContext";
-
+import "../../css/profile.css";
 export default function Profile() {
   const { id } = useParams();
 
@@ -45,7 +45,7 @@ export default function Profile() {
   }
 
   const othersProfile = (
-    <div className="flex flex-row gap-5 justify-center items-center">
+    <div className="profile-interact">
       <button
         className="bg-primary-500 text-white rounded-md p-2"
         onClick={handleFollow}
@@ -59,7 +59,7 @@ export default function Profile() {
   );
 
   const ownProfile = (
-    <div className="flex flex-row gap-5 justify-center items-center">
+    <div className="profile-edit">
       <Link
         to={`/profile/edit/${user?._id}`}
         className="bg-primary-500 text-white rounded-md p-2"
@@ -71,15 +71,14 @@ export default function Profile() {
 
   return (
     <Container>
-      <div className="flex flex-col gap-5 justify-center items-center">
+      <div className="profile-container">
         <img
           alt={profile?.username}
           src={profile?.avatar ? profile.avatar : "/img/avatar.png"}
-          className="object-contain w-40 h-40 rounded-full"
         />
         <p>{profile?.username}</p>
         <p>{profile?.bio}</p>
-        <div className="flex flex-row gap-5 justify-center items-center">
+        <div className="profile-follower">
           <button>{profile?.followers} Followers</button>
           <button>{profile?.following} Following</button>
         </div>

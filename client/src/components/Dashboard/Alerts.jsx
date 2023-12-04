@@ -12,7 +12,7 @@ export default function DashboardAlerts() {
   });
 
   return (
-    <div className="p-5 flex flex-col items-center text-white w-full">
+    <div className="container">
       <h2>Alerts</h2>
       <form
         className="flex flex-col items-center justify-center w-full"
