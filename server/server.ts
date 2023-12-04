@@ -127,6 +127,10 @@ const alertsRoute = require("./routes/user-routes/alerts");
 
 app.use("/alerts", verifyToken, alertsRoute);
 
+const messagesRoute = require("./routes/user-routes/messages");
+
+app.use("/messages", verifyToken, messagesRoute);
+
 
 
 function filesCors(req: Request, res: Response, next: NextFunction) {

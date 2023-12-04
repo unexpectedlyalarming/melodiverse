@@ -5,6 +5,7 @@ const router = express.Router();
 const Group = require("../models/group");
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
+import mongoose from 'mongoose';
 
 
 //Set up multer
@@ -130,7 +131,7 @@ router.patch("/:groupId/join", async (req: Request, res: Response) => {
 
 
 
-        res.status(200).json(group);
+        res.status(200).json({ message: "User added to group" });
     } catch (err: any) {
         res.status(500).json({ message: err });
     }
@@ -140,7 +141,7 @@ router.patch("/:groupId/join", async (req: Request, res: Response) => {
 
 router.patch("/:groupId/leave", async (req: Request, res: Response) => {
     try {
-        const userId = req.user?._id;
+        const userId = new mongoose.Types.ObjectId(req.user?._id).toString();
         const groupId = req.params.groupId;
 
         if (!userId) {
@@ -167,13 +168,13 @@ router.patch("/:groupId/leave", async (req: Request, res: Response) => {
 
         //Remove user from groups members array
 
-        group.members = group.members.filter((member: string) => member !== userId);
+        group.members = group.members.filter((member: string) => member.toString() !== userId);
 
         await group.save();
 
 
 
-        res.status(200).json(group);
+        res.status(200).json({ message: "User removed from group" });
     } catch (err: any) {
         res.status(500).json({ message: err });
     }

@@ -1,9 +1,9 @@
 import express from 'express';
 import { Response, NextFunction } from "express";
-import Request from "../interfaces/Request";
+import Request from "../../interfaces/Request";
 const router = express.Router();
-const User = require("../models/User");
-const Message = require("../models/Message");
+const User = require("../../models/User");
+const Message = require("../../models/Message");
 
 //Get all unique users that have sent or received messages to/from current user
 
@@ -72,3 +72,5 @@ router.delete("/:messageId", async (req: Request, res: Response) => {
     }
 });
 
+
+module.exports = router;

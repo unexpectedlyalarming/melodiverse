@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useApi from "../hooks/useApi";
+import { Link } from "react-router-dom";
 
 export default function Inbox() {
+  const [inboxType, setInboxType] = useState("alerts");
   const {
     data: alerts,
     error,
@@ -11,11 +13,23 @@ export default function Inbox() {
     url: "/alerts",
   });
 
+  const {
+    data: users,
+    loading: usersLoading,
+    request: getUsers,
+  } = useApi({
+    url: "/messages/users",
+  });
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   useEffect(() => {
     getAlerts();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading || usersLoading) return <div>Loading...</div>;
 
   if (error) return <div>Error fetching data</div>;
 
@@ -30,12 +44,53 @@ export default function Inbox() {
       );
     });
 
-  return (
-    <div className="p-5 flex flex-col items-center text-white w-full">
+  const alertsView = (
+    <>
       <h2>Alerts</h2>
-      <ul className="p-2 overflow-x-hidden text-white flex flex-col gap-5 justify-center items-center">
-        {alertList}
-      </ul>
+      <ul className="inbox-list">{alertList}</ul>
+    </>
+  );
+
+  const messagesList =
+    users.length > 0 ? (
+      users.map((user) => {
+        return (
+          <li key={user._id}>
+            <button>{user.username}</button>
+          </li>
+        );
+      })
+    ) : (
+      <p>No messages.</p>
+    );
+  const messagesView = (
+    <>
+      <h2>Messages</h2>
+      <ul className="inbox-list">{messagesList}</ul>
+    </>
+  );
+
+  return (
+    <div className="inbox-container">
+      <div className="inbox-type">
+        <button
+          onClick={() => {
+            setInboxType("alerts");
+          }}
+          className=""
+        >
+          Alerts
+        </button>
+        <button
+          onClick={() => {
+            setInboxType("messages");
+          }}
+          className=""
+        >
+          Messages
+        </button>
+      </div>
+      {inboxType === "alerts" ? alertsView : messagesView}
     </div>
   );
 }

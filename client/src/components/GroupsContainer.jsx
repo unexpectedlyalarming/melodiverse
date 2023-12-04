@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
 import { UserContext } from "../contexts/UserContext";
@@ -15,6 +15,8 @@ export default function GroupsContainer() {
         .then((res) => res.data),
     refetchInterval: 4000,
   });
+
+  const queryClient = useQueryClient();
 
   if (status === "loading" || status === "pending")
     return <div>Loading...</div>;
@@ -33,6 +35,8 @@ export default function GroupsContainer() {
             withCredentials: true,
           });
         }
+        //update the cache
+        queryClient.invalidateQueries("groups");
       } catch (err) {
         console.error(err);
       }
