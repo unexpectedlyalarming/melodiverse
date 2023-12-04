@@ -75,9 +75,5 @@ export default function SamplesContainer({
         </li>
       );
     });
-  return (
-    <ul className="p-2 overflow-x-hidden text-white flex flex-row gap-5 justify-center items-center">
-      {sampleList}
-    </ul>
-  );
+  return <ul>{sampleList}</ul>;
 }

@@ -22,7 +22,7 @@ export default function Sample() {
   if (status === "error") return <div>Error fetching data</div>;
 
   return (
-    <div className="sample flex flex-col items-center justify-center">
+    <div className="sample">
       <AudioPlayer sample={sample} />
       <p className="sample-description">{sample?.description}</p>
       <div className="sample-info">

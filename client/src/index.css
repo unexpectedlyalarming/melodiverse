@@ -1,21 +1,106 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Rubik+Mono+One&display=swap");
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --primary: rgb(243, 235, 235);
+  --secondary: #2d3748;
+  --accent: rgb(255, 244, 35);
+  --accent-dark: rgb(255, 223, 11);
+  --accent-secondary: rgb(255, 148, 17);
+  --accent-complimentary: rgb(87, 66, 255);
+
+  --red: rgb(255, 74, 20);
+
+  --green: rgb(150, 226, 0);
+
+  --text-primary: rgb(243, 235, 235);
+  --text-secondary: #4a5568;
+  --text-disabled: #a0aec0;
+
+  --bg-primary: #120e12;
+  --bg-secondary: rgb(38, 31, 41);
+
+  --font-size-xs: 0.8rem;
+  --font-size-sm: 1rem;
+  --font-size-base: 1.2rem;
+  --font-size-lg: 1.4rem;
+  --font-size-xl: 1.6rem;
+  --font-size-2xl: 1.8rem;
+  --font-size-3xl: 2rem;
+
+  --font-heading: "Rubik Mono One", system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
+  --font-primary: "Manrope", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-secondary: "Manrope", system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  --border-radius: 0.1rem;
+
+  --border-radius-lg: 0.3rem;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  --transition: all 0.3s ease-out;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+button {
+  background-color: var(--accent-complimentary);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: 800;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+button svg {
+  color: var(--text-primary);
+  height: 1.5rem;
+  width: 1.5rem;
+
+  stroke-width: 1px;
+  stroke: var(--text-primary);
+}
+
+svg {
+  color: var(--text-primary);
+  height: 1.5rem;
+  width: 1.5rem;
+
+  stroke-width: 1px;
+  stroke: var(--text-primary);
 }
 
 form {
@@ -33,7 +118,16 @@ input {
   align-items: center;
   justify-content: center;
   max-width: 100%;
-  padding: 0.25rem;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0.5rem 1rem;
 }
 
 .sample-container {

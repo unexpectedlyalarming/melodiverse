@@ -130,30 +130,28 @@ export default function AudioPlayer({ sample }) {
 
   const ownerControls = (
     <>
-      <button onClick={handleDelete} className="text-white text-md">
+      <button onClick={handleDelete} className="owner-control">
         Delete
       </button>
-      <button onClick={handleEdit} className="text-white text-md">
+      <button onClick={handleEdit} className="owner-control">
         Edit
       </button>
     </>
   );
 
   return (
-    <div className=" sample-container text-white flex flex-col justify-center items-center p-5 rounded-md border-2 border-neutral-500  ">
-      <Link to={`/sample/${sample._id}`} className="text-white text-md">
+    <div className="sample-container">
+      <Link to={`/sample/${sample._id}`} className="">
         {sample.title}
       </Link>
-      <div className="sample-info flex flex-row place-content-around items-center gap-5">
-        <Link to={`/profile/${sample.userId}`} className="text-white text-sm">
+      <div className="sample-info">
+        <Link to={`/profile/${sample.userId}`} className="">
           {sample.username}
         </Link>
-        <time className="text-white text-sm">
-          Posted {sample?.date?.split("T", 1)}
-        </time>
+        <time className="">Posted {sample?.date?.split("T", 1)}</time>
       </div>
       <audio ref={audioRef} src={sample.sample} />
-      <div className="flex flex-col justify-center items-center">
+      <div className="audio-visualizer">
         {/* Visualize */}
         {blob && (
           <AudioVisualizer
@@ -167,13 +165,13 @@ export default function AudioPlayer({ sample }) {
           />
         )}
       </div>
-      <div className="flex flex-col justify-center items-center">
+      <div className="sample-controls">
         {/* Controls */}
         <button onClick={togglePlay}>
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
-        <div className="slider ">
-          <p className="text-white text-sm">Volume</p>
+        <div className="slider">
+          <p>Volume</p>
 
           <Slider.Root
             min={0}
@@ -181,27 +179,29 @@ export default function AudioPlayer({ sample }) {
             step={0.01}
             value={[volume]}
             onValueChange={handleVolumeChange}
-            className="relative flex items-center select-none touch-none w-[200px] h-5"
+            className="slider-root"
           >
-            <Slider.Track className="bg-blackA7 relative grow rounded-full h-2">
-              <Slider.Range className="absolute bg-white rounded-full h-full" />
+            <Slider.Track className="slider-track">
+              <Slider.Range className="slider-range" />
             </Slider.Track>
-            <Slider.Thumb
-              className="block w-5 h-5 bg-white rounded-full focus:shadow-blackA5"
-              aria-label="Volume"
-            />
+            <Slider.Thumb className="slider-thumb" aria-label="Volume" />
           </Slider.Root>
-          <p className="text-white text-sm">{Math.round(volume * 100)}</p>
+          <p className="">{Math.round(volume * 100)}</p>
         </div>
-        <div className="interactables flex justify-center gap-2 items-center flex-row">
-          <p className="text-white">
+        <div className="audio-info">
+          <p>Key: {sample.key}</p>
+          <p>BPM: {sample.bpm}</p>
+          <p>Genre: {sample.genre}</p>
+        </div>
+        <div className="interactables">
+          <p>
             <DownloadIcon onClick={handleDownload} />
           </p>
-          <p className="text-white text-md flex flex-row gap-1 items-center justify-center">
+          <p>
             <HeartIcon onClick={handleLike} />
             {likes}
           </p>
-          <p className="text-white text-md">
+          <p>
             <Share2Icon onClick={handleShare} />
           </p>
           {sample.userId === user?._id && ownerControls}

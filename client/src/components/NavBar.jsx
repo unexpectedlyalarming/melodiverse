@@ -3,12 +3,16 @@ import { BellIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 import useAuth from "../hooks/useAuth";
+import { useMediaQuery } from "react-responsive";
+import "../css/nav.css";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const { logout } = useAuth();
   const { user } = useContext(UserContext);
+
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   async function handleLogout() {
     try {
@@ -25,64 +29,50 @@ export default function NavBar() {
 
   const modOptions = (
     <>
-      <li className="p-2 hover:bg-gray-800">
+      <li>
         <Link to="/dashboard">Dashboard</Link>
       </li>
     </>
   );
   const userOptions = (
     <>
-      <li className="p-2 hover:bg-gray-800">
+      <li>
         <Link to={`/profile/${user._id}`}>Profile</Link>
       </li>
-      <li className="p-2 hover:bg-gray-800">
+      <li>
         <button onClick={handleLogout}>Logout</button>
       </li>
-      <li className="p-2 hover:bg-gray-800 flex justify-center items-center gap-2">
+      <li className="nav-inbox">
         <Link to="/inbox">Inbox</Link>
         <BellIcon />
       </li>
     </>
   );
   return (
-    <div className="bg-black text-white">
-      <div className="flex justify-between items-center">
-        <div className="lg:hidden">
-          <button className="p-2" onClick={toggleMenu}>
-            <CaretDownIcon />
-          </button>
-        </div>
+    <nav className="nav">
+      <div className={isMobile ? "" : "hidden"}>
+        <button className="mobile-menu" onClick={toggleMenu}>
+          <CaretDownIcon />
+        </button>
       </div>
 
-      <ul
-        className={`lg:flex lg:space-x-4 mt-4 ${
-          menuOpen ? "flex" : "hidden"
-        } lg:items-center lg:justify-center`}
-      >
-        <li className="block lg:inline-block p-2">
-          <Link to="/" className="block lg:inline-block p-2">
-            Home
-          </Link>
+      <ul className={isMobile && menuOpen ? "hidden" : null}>
+        <li>
+          <Link to="/">Home</Link>
         </li>
 
-        <li className="block lg:inline-block p-2">
-          <Link to="/samples" className="block lg:inline-block p-2">
-            Samples
-          </Link>
+        <li>
+          <Link to="/samples">Samples</Link>
         </li>
-        <li className="block lg:inline-block p-2">
-          <Link to="/groups" className="block lg:inline-block p-2">
-            Groups
-          </Link>
+        <li>
+          <Link to="/groups">Groups</Link>
         </li>
-        <li className="block lg:inline-block p-2">
-          <Link to="/about" className="block lg:inline-block p-2">
-            About
-          </Link>
+        <li>
+          <Link to="/about">About</Link>
         </li>
         {user ? userOptions : null}
         {user?.moderator ? modOptions : null}
       </ul>
-    </div>
+    </nav>
   );
 }

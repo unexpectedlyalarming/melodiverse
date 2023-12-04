@@ -8,10 +8,7 @@ import CreateSample from "../components/CreateSample";
 export default function Home() {
   return (
     <>
-      <Container>
-        <CreateSample />
-        <Feed />
-      </Container>
+      <Feed />
     </>
   );
 }

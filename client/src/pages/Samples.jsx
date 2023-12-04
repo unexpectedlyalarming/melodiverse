@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Container from "../components/Container";
 import SamplesContainer from "../components/SamplesContainer";
 import useApi from "../hooks/useApi";
+import "../css/samples.css";
 
 export default function Samples() {
   const [sort, setSort] = useState("date");
@@ -93,7 +94,7 @@ export default function Samples() {
   return (
     <Container>
       <h2>Samples</h2>
-      <div className="filters flex flex-row items-center justify-center gap-5">
+      <div className="filters">
         <div className="sort">
           <label htmlFor="sort">Sort by</label>
           <select

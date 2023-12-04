@@ -77,14 +77,18 @@ export default function CreateSample() {
   if (hidden) {
     return (
       <>
-        <button onClick={() => setHidden(!hidden)}>Create Sample</button>
+        <button onClick={() => setHidden(!hidden)} className="create-sample">
+          Create Sample
+        </button>
       </>
     );
   }
 
   return (
     <>
-      <button onClick={() => setHidden(!hidden)}>Close</button>
+      <button onClick={() => setHidden(!hidden)} className="create-sample">
+        Close
+      </button>
 
       <form
         onSubmit={(e) => {
