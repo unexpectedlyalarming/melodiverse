@@ -56,26 +56,16 @@ export default function Profile() {
 
   const othersProfile = (
     <div className="profile-interact">
-      <button
-        className="bg-primary-500 text-white rounded-md p-2"
-        onClick={handleFollow}
-      >
+      <button onClick={handleFollow}>
         {following ? "Unfollow" : "Follow"}
       </button>
-      <button className="bg-primary-500 text-white rounded-md p-2">
-        Message
-      </button>
+      <Link to={`/message/${id}`}>Message</Link>
     </div>
   );
 
   const ownProfile = (
     <div className="profile-edit">
-      <Link
-        to={`/profile/edit/${user?._id}`}
-        className="bg-primary-500 text-white rounded-md p-2"
-      >
-        Edit Profile
-      </Link>
+      <Link to={`/profile/edit/${user?._id}`}>Edit Profile</Link>
     </div>
   );
 

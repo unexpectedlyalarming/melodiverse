@@ -31,6 +31,8 @@ import { UserProvider } from "./contexts/UserContext";
 import EditProfile from "./pages/Modular/EditProfile";
 import Followers from "./pages/Modular/Followers";
 import Following from "./pages/Modular/Following";
+import Message from "./pages/Modular/Message";
+import MessagePage from "./pages/Modular/MessagePage";
 
 const queryClient = new QueryClient();
 
@@ -142,6 +144,14 @@ export default function Router() {
         {
           path: "/inbox",
           element: <Inbox />,
+        },
+        {
+          path: "/message/:id",
+          element: <Message />,
+        },
+        {
+          path: "/message/user/:id",
+          element: <MessagePage />,
         },
 
         //Sample packs, messages, alerts

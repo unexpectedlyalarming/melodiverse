@@ -56,7 +56,7 @@ export default function Inbox() {
       users.map((user) => {
         return (
           <li key={user._id}>
-            <button>{user.username}</button>
+            <Link to={`/message/user/${user._id}`}>{user.username}</Link>
           </li>
         );
       })
