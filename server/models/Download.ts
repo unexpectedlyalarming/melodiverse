@@ -12,11 +12,6 @@ const DownloadSchema = new mongoose.Schema({
     ref: "Sample",
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-    max: 10,
-  },
   date: {
     type: Date,
     default: Date.now,

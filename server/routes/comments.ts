@@ -12,8 +12,30 @@ const Comment = require("../models/comment");
 
 router.get("/sample/:postId", async (req: Request, res: Response) => {
     try {
-        const comments = await Comment.find({ itemId: req.params.postId });
-        res.status(200).json(comments);
+        const comments = await Comment.aggregate([
+            { $match: { itemId: new mongoose.Types.ObjectId(req.params.postId) } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "userId",
+                    foreignField: "_id",
+                    as: "user",
+                },
+            },
+            { $unwind: "$user" },
+            {
+                $project: {
+                    _id: 1,
+                    itemId: 1,
+                    comment: 1,
+                    userId: 1,
+                    username: "$user.username",
+                    avatar: "$user.avatar",
+                },
+            },
+        ]);
+        const result = comments.length > 0 ? comments : [];
+        res.status(200).json(result);
     } catch (err: any) {
         res.status(500).json({ message: err });
     }

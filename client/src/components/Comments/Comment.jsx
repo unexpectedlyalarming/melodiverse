@@ -35,7 +35,7 @@ export default function Comment({ comment, deleteProp }) {
   }
 
   const ownerOptions = (
-    <div className="flex flex-row items-center justify-start w-full">
+    <div className="comment-options">
       <button onClick={handleDelete} className="text-gray-300 text-sm">
         Delete
       </button>
@@ -46,21 +46,17 @@ export default function Comment({ comment, deleteProp }) {
   );
 
   return (
-    <div className="flex flex-col items-start justify-start w-full p-5">
-      <div className="flex flex-row items-center justify-start w-full">
-        <div className="flex flex-col items-start justify-start w-full">
-          <p className="text-gray-300 text-sm">{comment.comment}</p>
-        </div>
+    <div className="comment">
+      <div className="comment-content">
+        <p className="text-gray-300 text-sm">{comment.comment}</p>
       </div>
-      <div className="flex flex-row items-center justify-start w-full">
-        <div className="flex flex-col items-start justify-start w-full">
-          <Link
-            to={`/profile/${comment.userId}`}
-            className="text-gray-300 text-sm"
-          >
-            {comment.username}
-          </Link>
-        </div>
+      <div className="comment-user">
+        <Link
+          to={`/profile/${comment.userId}`}
+          className="text-gray-300 text-sm"
+        >
+          {comment.username}
+        </Link>
       </div>
       {user._id === comment.userId ? ownerOptions : null}
     </div>

@@ -4,12 +4,20 @@ import { Link, useParams } from "react-router-dom";
 import useApi from "../../hooks/useApi";
 import { UserContext } from "../../contexts/UserContext";
 import "../../css/profile.css";
+import Sample from "./Sample";
+import AudioPlayer from "../../components/AudioPlayer";
+import Groups from "../Groups";
+import Group from "../../components/Group";
 export default function Profile() {
   const { id } = useParams();
 
   const { user } = useContext(UserContext);
 
-  const { data: profile, request: getProfile } = useApi({
+  const {
+    data: profile,
+    request: getProfile,
+    loading,
+  } = useApi({
     url: `/users/${id}`,
   });
 
@@ -44,6 +52,8 @@ export default function Profile() {
     }
   }
 
+  if (loading) return <p>Loading...</p>;
+
   const othersProfile = (
     <div className="profile-interact">
       <button
@@ -69,6 +79,24 @@ export default function Profile() {
     </div>
   );
 
+  const samples =
+    profile.samples.length > 0 ? (
+      profile.samples.map((sample) => {
+        return <AudioPlayer key={sample._id} sample={sample} />;
+      })
+    ) : (
+      <p>No samples</p>
+    );
+
+  const groups =
+    profile.groups.length > 0 ? (
+      profile.groups.map((group) => {
+        return <Group key={group._id} group={group} />;
+      })
+    ) : (
+      <p>No groups</p>
+    );
+
   return (
     <Container>
       <div className="profile-container">
@@ -88,6 +116,15 @@ export default function Profile() {
         </div>
         {user?._id !== profile?._id && othersProfile}
         {user?._id === profile?._id && ownProfile}
+
+        <ul className="profile-samples">
+          <h2>Samples</h2>
+          {samples}
+        </ul>
+        <ul className="profile-groups">
+          <h2>Groups</h2>
+          {groups}
+        </ul>
       </div>
     </Container>
   );

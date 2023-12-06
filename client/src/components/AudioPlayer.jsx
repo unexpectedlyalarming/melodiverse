@@ -57,14 +57,29 @@ export default function AudioPlayer({ sample }) {
     e.preventDefault();
     try {
       //Download sample.sample
-      const response = await fetch(sample.sample);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      // const response = await fetch(sample.sample);
+      // const blob = await response.blob();
+      // const url = window.URL.createObjectURL(blob);
+      // const a = document.createElement("a");
+      // a.href = url;
+      // const fileName =
+      //   sample.title + "-" + sample.key + "-" + sample.bpm + "bpm";
+
+      // a.download = fileName;
+      // document.body.appendChild(a);
+      // a.click();
+      // a.remove();
+
+      const response = await axios.get(
+        ServerURL + `/samples/download/${sample._id}`,
+        { responseType: "blob", withCredentials: true }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
       const a = document.createElement("a");
       a.href = url;
       const fileName =
         sample.title + "-" + sample.key + "-" + sample.bpm + "bpm";
-
       a.download = fileName;
       document.body.appendChild(a);
       a.click();
@@ -196,6 +211,7 @@ export default function AudioPlayer({ sample }) {
         <div className="interactables">
           <p>
             <DownloadIcon onClick={handleDownload} />
+            {sample.downloads}
           </p>
           <p>
             <HeartIcon onClick={handleLike} />

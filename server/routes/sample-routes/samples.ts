@@ -181,8 +181,8 @@ router.get("/sort/date/:page/:limit", async (req: Request, res: Response) => {
 
         $lookup: {
           from: "downloads",
-          localField: "downloads",
-          foreignField: "_id",
+          localField: "_id",
+           foreignField: "itemId",
           as: "downloads",
         }
       },
@@ -262,8 +262,8 @@ router.get("/sort/downloads/:page/:limit", async (req: Request, res: Response) =
 
         $lookup: {
           from: "downloads",
-          localField: "downloads",
-          foreignField: "_id",
+          localField: "_id",
+           foreignField: "itemId",
           as: "downloads",
         }
       },
@@ -342,8 +342,8 @@ router.get("/sort/views/:page/:limit", async (req: Request, res: Response) => {
 
         $lookup: {
           from: "downloads",
-          localField: "downloads",
-          foreignField: "_id",
+          localField: "_id",
+           foreignField: "itemId",
           as: "downloads",
         }
       },
@@ -422,8 +422,8 @@ router.get("/sort/likes/:page/:limit", async (req: Request, res: Response) => {
 
         $lookup: {
           from: "downloads",
-          localField: "downloads",
-          foreignField: "_id",
+          localField: "_id",
+           foreignField: "itemId",
           as: "downloads",
         }
       },
@@ -510,8 +510,8 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
       {
         $lookup: {
           from: "downloads",
-          localField: "downloads",
-          foreignField: "_id",
+          localField: "_id",
+           foreignField: "itemId",
           as: "downloads",
         },
       },
@@ -632,8 +632,8 @@ router.get("/genre/:genre/:sort/:page/:limit", async (req: Request, res: Respons
   
           $lookup: {
             from: "downloads",
-            localField: "downloads",
-            foreignField: "_id",
+            localField: "_id",
+            foreignField: "itemId",
             as: "downloads",
           }
         },
@@ -720,8 +720,8 @@ router.get("/key/:key/:sort/:page/:limit", async (req: Request, res: Response) =
   
           $lookup: {
             from: "downloads",
-            localField: "downloads",
-            foreignField: "_id",
+            localField: "_id",
+            foreignField: "itemId",
             as: "downloads",
           }
         },
@@ -813,7 +813,7 @@ router.get("/bpm/:bpm/:sort/:page/:limit", async (req: Request, res: Response) =
     
             $lookup: {
               from: "downloads",
-              localField: "downloads",
+              localField: "_id",
               foreignField: "_id",
               as: "downloads",
             }
@@ -898,12 +898,13 @@ router.get("/download/:id", async (req: Request, res: Response) => {
 
     const download = new Download({
       userId: req.user?._id,
-      sampleId: req.params.id,
+      itemId: req.params.id,
     });
     await download.save();
 
+    const filePath = path.join('public', 'audio', path.basename(sample.sample));
 
-    res.status(200).download(sample.sample);
+    res.status(200).download(filePath);
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
