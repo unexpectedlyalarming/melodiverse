@@ -29,6 +29,8 @@ import axios from "axios";
 import ServerURL from "./variables/URLs";
 import { UserProvider } from "./contexts/UserContext";
 import EditProfile from "./pages/Modular/EditProfile";
+import Followers from "./pages/Modular/Followers";
+import Following from "./pages/Modular/Following";
 
 const queryClient = new QueryClient();
 
@@ -128,6 +130,14 @@ export default function Router() {
         {
           path: "/profile/edit/:id",
           element: <EditProfile />,
+        },
+        {
+          path: "/profile/followers/:id",
+          element: <Followers />,
+        },
+        {
+          path: "/profile/following/:id",
+          element: <Following />,
         },
         {
           path: "/inbox",

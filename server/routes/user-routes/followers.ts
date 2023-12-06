@@ -7,6 +7,7 @@ const Follower = require("../../models/Follower");
 
 import { Response, NextFunction } from "express";
 import Request from "../../interfaces/Request";
+import mongoose from "mongoose";
 
 
 
@@ -16,8 +17,33 @@ import Request from "../../interfaces/Request";
 
 router.get("/:id", async (req: Request, res: Response) => {
     try {
-        const followers = await Follower.find({ receiverId: req.params.id });
-        res.status(200).json({ followers });
+        const id = new mongoose.Types.ObjectId(req.params.id);
+        const followers = await Follower.aggregate([
+            {
+                $match: { receiverId: id }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "senderId",
+                    foreignField: "_id",
+                    as: "user"
+                }
+            },
+            {
+                $unwind: "$user"
+            },
+            {
+                $project: {
+                    _id: "$user._id",
+                    username: "$user.username",
+                    avatar: "$user.avatar"
+                }
+            }
+        ]);
+        const result = followers.length > 0 ? followers : [];
+        console.log(followers)
+        res.status(200).json( result);
     } catch (err: any) {
         res.status(500).json({ message: err.message });
     }
@@ -27,8 +53,33 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.get("/following/:id", async (req: Request, res: Response) => {
     try {
-        const following = await Follower.find({ senderId: req.params.id });
-        res.status(200).json({ following });
+        const id = new mongoose.Types.ObjectId(req.params.id);
+        const followers = await Follower.aggregate([
+            {
+                $match: { senderId: id }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "receiverId",
+                    foreignField: "_id",
+                    as: "user"
+                }
+            },
+            {
+                $unwind: "$user"
+            },
+            {
+                $project: {
+                    _id: "$user._id",
+                    username: "$user.username",
+                    avatar: "$user.avatar"
+                }
+            }
+        ]);
+        const result = followers.length > 0 ? followers : [];
+        console.log(followers)
+        res.status(200).json( result);
     } catch (err: any) {
         res.status(500).json({ message: err.message });
     }

@@ -19,11 +19,11 @@ export default function Profile() {
 
   useEffect(() => {
     getProfile();
-  }, [following]);
+  }, [following, id]);
 
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [id]);
 
   const { data: follower, request: follow } = useApi({
     url: `/followers/${id}`,
@@ -32,7 +32,7 @@ export default function Profile() {
 
   useEffect(() => {
     getFollowing();
-  }, [follower]);
+  }, [follower, id]);
 
   async function handleFollow(e) {
     e.preventDefault();
@@ -79,8 +79,12 @@ export default function Profile() {
         <p>{profile?.username}</p>
         <p>{profile?.bio}</p>
         <div className="profile-follower">
-          <button>{profile?.followers} Followers</button>
-          <button>{profile?.following} Following</button>
+          <Link to={`/profile/followers/${id}`}>
+            {profile?.followers} Followers
+          </Link>
+          <Link to={`/profile/following/${id}`}>
+            {profile?.following} Following
+          </Link>
         </div>
         {user?._id !== profile?._id && othersProfile}
         {user?._id === profile?._id && ownProfile}
