@@ -42,54 +42,182 @@ router.get("/:id", async (req: Request, res: Response) => {
         // .select("-password");
         const id = new mongoose.Types.ObjectId(req.params.id);
         //new pipeline
-        const user = await User.aggregate([
-            { $match: { _id: id } },
-            {
-              $lookup: {
-                from: "followers",
-                localField: "_id",
-                foreignField: "receiverId",
-                as: "followers",
-              },
-            },
-            {
-              $lookup: {
-                from: "followers",
-                localField: "_id",
-                foreignField: "senderId",
-                as: "following",
-              },
-            },
-            {
-              $lookup: {
-                from: "samples",
-                localField: "_id",
-                foreignField: "userId",
-                as: "samples",
-              },
-            },
-            {
-              $lookup: {
-                from: "groups",
-                localField: "_id",
-                foreignField: "members",
-                as: "groups",
-              },
-            },
-            { $project: {
-                username: 1,
-                bio: 1,
-                avatar: 1,
-                followers: ({ $size: "$followers" }),
-                following: ({ $size: "$following" }),
-                samples: 1,
-                groups: 1,
-                date: 1,
-                _id: 1,
+        // const user = await User.aggregate([
+        //     { $match: { _id: id } },
+        //     {
+        //       $lookup: {
+        //         from: "followers",
+        //         localField: "_id",
+        //         foreignField: "receiverId",
+        //         as: "followers",
+        //       },
+        //     },
+        //     {
+        //       $lookup: {
+        //         from: "followers",
+        //         localField: "_id",
+        //         foreignField: "senderId",
+        //         as: "following",
+        //       },
+        //     },
+        //     {
+        //       $lookup: {
+        //         from: "samples",
+        //         localField: "_id",
+        //         foreignField: "userId",
+        //         as: "samples",
+        //       },
+        //       //Populate samples with views, downloads, and likes
 
-             },
-            },
-          ]);
+
+
+        //     },
+        //     {
+        //       $lookup: {
+        //         from: "groups",
+        //         localField: "_id",
+        //         foreignField: "members",
+        //         as: "groups",
+        //       },
+        //     },
+        //     { $project: {
+        //         username: 1,
+        //         bio: 1,
+        //         avatar: 1,
+        //         followers: ({ $size: "$followers" }),
+        //         following: ({ $size: "$following" }),
+        //         samples: 1,
+        //         groups: 1,
+        //         date: 1,
+        //         _id: 1,
+
+        //      },
+        //     },
+        //   ]);
+
+
+        //This is awful to look at. I'm sorry to anyone that has to read this
+const user = await User.aggregate([
+  { $match: { _id: id } },
+  {
+    $lookup: {
+      from: "followers",
+      localField: "_id",
+      foreignField: "receiverId",
+      as: "followers",
+    },
+  },
+  {
+    $lookup: {
+      from: "followers",
+      localField: "_id",
+      foreignField: "senderId",
+      as: "following",
+    },
+  },
+  {
+    $lookup: {
+      from: "samples",
+      let: { userId: "$_id" },
+      pipeline: [
+        { $match: { $expr: { $eq: ["$userId", "$$userId"] } } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        { $unwind: "$user" },
+        {
+          $lookup: {
+            from: "samplepacks",
+            localField: "packs",
+            foreignField: "_id",
+            as: "packs",
+          },
+        },
+        {
+          $lookup: {
+            from: "downloads",
+            localField: "_id",
+            foreignField: "itemId",
+            as: "downloads",
+          },
+        },
+        {
+          $lookup: {
+            from: "views",
+            localField: "_id",
+            foreignField: "itemId",
+            as: "views",
+          },
+        },
+        {
+          $lookup: {
+            from: "likes",
+            localField: "_id",
+            foreignField: "itemId",
+            as: "likes",
+          },
+        },
+        {
+          $project: {
+            username: "$user.username",
+            userId: 1,
+            title: 1,
+            description: 1,
+            sample: 1,
+            format: 1,
+            bpm: 1,
+            key: 1,
+            genre: 1,
+            duration: 1,
+            downloads: { $size: "$downloads" },
+            likes: { $size: "$likes" },
+            tags: 1,
+            views: { $size: "$views" },
+            _id: 1,
+            date: 1,
+          },
+        },
+      ],
+      as: "samples",
+    },
+  },
+  {
+    $lookup: {
+      from: "groups",
+      localField: "_id",
+      foreignField: "members",
+      as: "groups",
+    },
+  },
+  {
+    $project: {
+      username: 1,
+      bio: 1,
+      avatar: 1,
+      followers: { $size: "$followers" },
+      following: { $size: "$following" },
+      samples: 1,
+      groups: 1,
+      date: 1,
+      _id: 1,
+      totalDownloads: {
+        $sum: "$samples.downloads",
+      },
+
+      totalViews: {
+        $sum: "$samples.views",
+      },
+      totalLikes: {
+        $sum: "$samples.likes",
+      },
+    },
+  },
+]);
         res.status(200).json( user[0] );
     } catch (err: any) {
         res.status(500).json({ message: err.message });

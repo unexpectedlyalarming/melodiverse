@@ -570,7 +570,78 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
 
 router.get("/user/:id", async (req: Request, res: Response) => {
   try {
-    const samples = await Sample.find({ userId: req.params.id }).sort({ date: -1 });
+    const id = new mongoose.Types.ObjectId(req.params.id);
+    const samples = await Sample.aggregate([
+      { $match: { userId: id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+        
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $lookup: {
+          from: "samplepacks",
+          localField: "packs",
+          foreignField: "_id",
+          as: "packs",
+        },
+      },
+      {
+        $lookup: {
+          from: "downloads",
+          localField: "_id",
+           foreignField: "itemId",
+          as: "downloads",
+        },
+      },
+      {
+        $lookup: {
+          from: "views",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "views",
+        },
+      },
+      {
+        $lookup: {
+          from: "likes",
+          localField: "_id",
+          foreignField: "itemId",
+          as: "likes",
+        }
+      },
+      
+      {
+        $project: {
+          "username": "$user.username",
+          "userId": 1,
+          "title": 1,
+          "description": 1,
+          "sample": 1,
+          "format": 1,
+          "bpm": 1,
+          "key": 1,
+          "genre": 1,
+          "duration": 1,
+          "downloads": { $size: "$downloads" },
+          "likes": { $size: "$likes" },
+          "tags": 1,
+          "views": { $size: "$views" },
+          "_id": 1,
+          "date": 1,
+          
+
+        },
+      },
+    
+    ]).then((result: any) => result[0]);
     res.status(200).json( samples );
   } catch (err: any) {
     res.status(500).json({ message: err.message });

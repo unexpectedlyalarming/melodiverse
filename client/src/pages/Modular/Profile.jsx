@@ -104,6 +104,12 @@ export default function Profile() {
             {profile?.following} Following
           </Link>
         </div>
+        <div className="profile-stats">
+          <p>{profile?.samples.length} Samples</p>
+          <p>{profile?.totalDownloads} Downloads</p>
+          <p>{profile?.totalViews} Views</p>
+          <p>{profile?.totalLikes} Likes</p>
+        </div>
         {user?._id !== profile?._id && othersProfile}
         {user?._id === profile?._id && ownProfile}
 

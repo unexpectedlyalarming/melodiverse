@@ -30,3 +30,12 @@
   max-width: 100%;
   padding: 1rem;
 }
+.profile-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 100%;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
