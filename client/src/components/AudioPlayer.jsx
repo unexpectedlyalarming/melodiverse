@@ -122,7 +122,9 @@ export default function AudioPlayer({ sample }) {
 
   function handleShare(e) {
     e.preventDefault();
-    const url = window.location.href;
+    const baseUrl = window.location.href;
+    const url = baseUrl + `sample/${sample._id}`;
+
     navigator.clipboard.writeText(url);
   }
 
