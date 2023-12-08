@@ -1,14 +1,15 @@
 import express from 'express';
 import { Response, NextFunction } from "express";
 import Request from "../interfaces/Request";
+import mongoose from 'mongoose';
 
 const View = require("../models/View");
 
 
 async function addView(req: Request, res: Response, next: NextFunction) {
     try {
-        const userId = req.user?._id;
-        const itemId = req.params?.id;
+        const userId = new mongoose.Types.ObjectId(req.user?._id);
+        const itemId = new mongoose.Types.ObjectId(req.params.id);
         if (!itemId) return next();
         const existingView = await View.findOne({ userId, itemId });
         if (existingView) return next();

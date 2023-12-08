@@ -33,6 +33,7 @@ import Followers from "./pages/Modular/Followers";
 import Following from "./pages/Modular/Following";
 import Message from "./pages/Modular/Message";
 import MessagePage from "./pages/Modular/MessagePage";
+import GroupPage from "./pages/Modular/GroupPage";
 
 const queryClient = new QueryClient();
 
@@ -152,6 +153,10 @@ export default function Router() {
         {
           path: "/message/user/:id",
           element: <MessagePage />,
+        },
+        {
+          path: "/group/:id",
+          element: <GroupPage />,
         },
 
         //Sample packs, messages, alerts

@@ -8,6 +8,7 @@ import {
   DownloadIcon,
   HeartIcon,
   Share2Icon,
+  EyeOpenIcon,
 } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import useApi from "../hooks/useApi";
@@ -155,7 +156,7 @@ export default function AudioPlayer({ sample }) {
   );
 
   return (
-    <div className="sample-container">
+    <li className="sample-container">
       <Link to={`/sample/${sample._id}`} className="">
         {sample.title}
       </Link>
@@ -210,6 +211,10 @@ export default function AudioPlayer({ sample }) {
         </div>
         <div className="interactables">
           <p>
+            <EyeOpenIcon />
+            {sample.views}
+          </p>
+          <p>
             <DownloadIcon onClick={handleDownload} />
             {sample.downloads}
           </p>
@@ -223,6 +228,6 @@ export default function AudioPlayer({ sample }) {
           {sample.userId === user?._id && ownerControls}
         </div>
       </div>
-    </div>
+    </li>
   );
 }

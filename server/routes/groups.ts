@@ -55,8 +55,38 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:groupId", async (req: Request, res: Response) => {
     try {
-        const group = await Group.findById(req.params.groupId);
-        res.status(200).json(group);
+        const groupId = new mongoose.Types.ObjectId(req.params.groupId);
+        //Grab group, and fill with collections (sample packs), samples, and the group object
+        const group = await Group.aggregate([
+            { $match: { _id: groupId } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "members",
+                    foreignField: "_id",
+                    as: "members",
+                },
+            },
+            {
+                $lookup: {
+                    from: "collections",
+                    localField: "collections",
+                    foreignField: "_id",
+                    as: "collections",
+                },
+            },
+            {
+                $project: {
+                    groupName: 1,
+                    groupDescription: 1,
+                    logo: 1,
+                    adminId: 1,
+                    collections: "$collections",
+                    members: "$members._id",
+                },
+            },
+        ]);
+        res.status(200).json(group[0]);
     } catch (err: any) {
         res.status(500).json({ message: err });
     }

@@ -189,10 +189,10 @@ router.get("/sort/date/:page/:limit", async (req: Request, res: Response) => {
       {
         $lookup: {
           from: "views",
-          localField: "views",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "itemId",
           as: "views",
-        }
+        },
       },
       {
         $lookup: {
@@ -270,10 +270,10 @@ router.get("/sort/downloads/:page/:limit", async (req: Request, res: Response) =
       {
         $lookup: {
           from: "views",
-          localField: "views",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "itemId",
           as: "views",
-        }
+        },
       },
       {
         $lookup: {
@@ -350,10 +350,10 @@ router.get("/sort/views/:page/:limit", async (req: Request, res: Response) => {
       {
         $lookup: {
           from: "views",
-          localField: "views",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "itemId",
           as: "views",
-        }
+        },
       },
       {
         $lookup: {
@@ -430,10 +430,10 @@ router.get("/sort/likes/:page/:limit", async (req: Request, res: Response) => {
       {
         $lookup: {
           from: "views",
-          localField: "views",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "itemId",
           as: "views",
-        }
+        },
       },
       {
         $lookup: {
@@ -518,8 +518,8 @@ router.get("/:id", addView, async (req: Request, res: Response) => {
       {
         $lookup: {
           from: "views",
-          localField: "views",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "itemId",
           as: "views",
         },
       },

@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import ServerURL from "../variables/URLs";
 import { UserContext } from "../contexts/UserContext";
+import { Link } from "react-router-dom";
 
 export default function GroupsContainer() {
   const { user } = useContext(UserContext);
@@ -48,7 +49,9 @@ export default function GroupsContainer() {
           src={group.logo}
           alt={`${group.groupName} logo`}
         />
-        <p className="group-name">{group.groupName}</p>
+        <Link to={`/group/${group._id}`} className="group-name">
+          {group.groupName}
+        </Link>
         <p className="group-description">{group.groupDescription}</p>
         <p className="group-members">
           {group.members.length > 0 ? group.members.length : 0} Members

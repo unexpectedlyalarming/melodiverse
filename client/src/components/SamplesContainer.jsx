@@ -69,11 +69,7 @@ export default function SamplesContainer({
   const sampleList =
     samples &&
     samples.map((sample) => {
-      return (
-        <li key={sample._id}>
-          <AudioPlayer sample={sample} />
-        </li>
-      );
+      return <AudioPlayer sample={sample} key={sample._id} />;
     });
-  return <ul>{sampleList}</ul>;
+  return <ul className="sample-list">{sampleList}</ul>;
 }
