@@ -49,7 +49,7 @@ app.use(morgan("dev"));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", corsOrigin);
-  res.header("Access-Control-Allow-Headers", corsOrigin);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Cross-Origin-Resource-Policy", "cross-origin");
 
   next();

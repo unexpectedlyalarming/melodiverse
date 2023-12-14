@@ -3,7 +3,7 @@ import { Response, NextFunction } from "express";
 import Request from "../../interfaces/Request";
 const router = express.Router();
 import checkModStatus from '../../utilities/modUtils';
-const Alert = require("../../models/alert");
+const Alert = require("../../models/Alert");
 
 
 

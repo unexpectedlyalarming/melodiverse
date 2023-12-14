@@ -2,7 +2,7 @@ import express from 'express';
 import { Response, NextFunction } from "express";
 import Request from "../interfaces/Request";
 const router = express.Router();
-const Group = require("../models/group");
+const Group = require("../models/Group");
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
 import mongoose from 'mongoose';

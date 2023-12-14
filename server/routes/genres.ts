@@ -3,7 +3,7 @@ import { Response, NextFunction } from "express";
 import Request from "../interfaces/Request";
 const router = express.Router();
 import checkModStatus from '../utilities/modUtils';
-const Genre = require("../models/genre");
+const Genre = require("../models/Genre");
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
 
