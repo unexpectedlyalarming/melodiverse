@@ -3,13 +3,15 @@ import Request from "../interfaces/Request";
 const Moderator = require("../models/Moderator");
 import jwt from "jsonwebtoken";
 import ReturnedUser from "../interfaces/ReturnedUser";
+import mongoose from "mongoose";
 
 const jwtSecret = process.env.JWT_SECRET || "secret";
 
 async function checkModStatus (req: Request, res: Response, next: NextFunction) {
     try {
         const user = jwt.verify(req.cookies?.accessToken, jwtSecret ) as ReturnedUser | null;
-        const userId = user?._id;
+        console.log(user)
+        const userId = new mongoose.Types.ObjectId(user?._id);
         console.log(userId)
         const moderator = await Moderator.findOne({ userId });
         console.log(moderator)

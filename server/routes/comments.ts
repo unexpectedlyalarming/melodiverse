@@ -4,7 +4,7 @@ import Request from "../interfaces/Request";
 import mongoose from 'mongoose';
 const router = express.Router();
 
-const Comment = require("../models/comment");
+const Comment = require("../models/Comment");
 
 
 
