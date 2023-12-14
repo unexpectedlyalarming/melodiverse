@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Group({ group }) {
   return (
-    <>
+    <Link to={`/group/${group._id}`}>
       <img
         className="group-logo object-contain w-40 h-40 rounded-md"
         src={group.logo}
@@ -13,6 +14,6 @@ export default function Group({ group }) {
       <p className="group-members">
         {group.members.length > 0 ? group.members.length : 0} Members
       </p>
-    </>
+    </Link>
   );
 }
