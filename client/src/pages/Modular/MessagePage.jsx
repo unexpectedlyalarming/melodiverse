@@ -52,7 +52,7 @@ export default function MessagePage() {
   ));
 
   return (
-    <div>
+    <div className="container">
       <h1>Message Page</h1>
       <ul>{messageList}</ul>
       <div className="container">
