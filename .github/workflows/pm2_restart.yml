@@ -17,11 +17,10 @@ jobs:
 
 
 
-      - name: Run git pull for production
-        run: |
-          cd /home/ubuntu/melodiverse
-          
-          git pull origin production
+      - name: Checkout 'production' branch
+        uses: actions/checkout@v2
+        with:
+          ref: production 
 
       - name: Restart PM2
         run: |
