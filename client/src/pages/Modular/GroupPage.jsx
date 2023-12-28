@@ -21,7 +21,7 @@ export default function GroupPage() {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>{group.groupName}</h1>
       <p>{group.groupDescription}</p>
 
