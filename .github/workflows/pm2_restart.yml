@@ -7,14 +7,18 @@ on:
 
 jobs:
   update_local_repo:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Run git pull for production
         run: |
           cd /home/ubuntu/melodiverse
           git pull origin production
-      
 
       - name: Restart PM2
         run: |
