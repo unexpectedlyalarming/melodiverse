@@ -19,6 +19,8 @@ jobs:
 
       - name: Run git pull for production
         run: |
+          pwd
+          cd ~/
           
           git pull origin production
 
