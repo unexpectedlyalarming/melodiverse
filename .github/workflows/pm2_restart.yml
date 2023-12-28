@@ -19,11 +19,10 @@ jobs:
 
       - name: Run git pull for production
         run: |
-          cd /home/ubuntu/melodiverse
+          
           git pull origin production
 
       - name: Restart PM2
         run: |
-          cd /home/ubuntu/melodiverse
           pm2 restart melodiverse-client
           pm2 restart melodiverse-server
