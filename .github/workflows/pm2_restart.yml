@@ -7,7 +7,7 @@ on:
 
 jobs:
   update_local_repo:
-    runs-on: ubuntu-23.04
+    runs-on: self-hosted
 
     steps:
       - name: Run git pull for production
