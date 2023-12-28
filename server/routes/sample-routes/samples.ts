@@ -7,6 +7,7 @@ import multer, { StorageEngine } from "multer";
 import Key from "../../types/Key";
 const Download = require("../../models/Download");
 const View = require("../../models/View");
+const Genre = require("../../models/Genre");
 import Request from "../../interfaces/Request";
 import addView from "../../utilities/viewUtils";
 import path from "path";
@@ -71,6 +72,18 @@ router.post("/", upload.single("sample"), checkFile, async (req: Request, res: R
     }
 
     const genre = req.body.genre;
+
+    if (!genre) {
+      return res.status(400).json({ message: "Genre is not valid" });
+    }
+
+    const isGenre = await Genre.findOne({ genre });
+
+    if (!isGenre) {
+      return res.status(400).json({ message: "Genre does not exist" });
+    }
+
+
     const tags: string[] = req.body.tags;
 
     if (!req.file) {

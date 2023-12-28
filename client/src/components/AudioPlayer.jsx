@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../contexts/UserContext";
 import ServerURL from "../variables/URLs";
+import { set } from "mongoose";
 
 export default function AudioPlayer({ sample }) {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ export default function AudioPlayer({ sample }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [likes, setLikes] = useState(sample.likes);
+  const [downloads, setDownloads] = useState(sample.downloads);
+  const [hasDownloaded, setHasDownloaded] = useState(false);
 
   useEffect(() => {
     fetch(sample.sample)
@@ -85,6 +88,11 @@ export default function AudioPlayer({ sample }) {
       document.body.appendChild(a);
       a.click();
       a.remove();
+      if (hasDownloaded) {
+        return;
+      }
+      setDownloads(downloads + 1);
+      setHasDownloaded(true);
     } catch (err) {
       console.error(err);
     }
@@ -118,6 +126,7 @@ export default function AudioPlayer({ sample }) {
   useEffect(() => {
     setLikes(sample.likes);
     checkLike();
+    setDownloads(sample.downloads);
   }, []);
 
   function handleShare(e) {
@@ -218,7 +227,7 @@ export default function AudioPlayer({ sample }) {
           </p>
           <p>
             <DownloadIcon onClick={handleDownload} />
-            {sample.downloads}
+            {downloads}
           </p>
           <p>
             <HeartIcon onClick={handleLike} />

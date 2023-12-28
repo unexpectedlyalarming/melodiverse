@@ -71,7 +71,7 @@ export default function Inbox() {
   );
 
   return (
-    <div className="inbox-container">
+    <div className="container inbox-container">
       <div className="inbox-type">
         <button
           onClick={() => {
