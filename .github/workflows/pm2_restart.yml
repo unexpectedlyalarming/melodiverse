@@ -15,8 +15,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Enter password
-        run: echo ${{ secrets.SSH_PASSPHRASE }}
+
 
       - name: Run git pull for production
         run: |
