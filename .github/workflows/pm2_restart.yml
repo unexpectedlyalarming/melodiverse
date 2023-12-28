@@ -14,7 +14,9 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+
+      - name: Enter password
+        run: echo ${{ secrets.SSH_PASSPHRASE }}
 
       - name: Run git pull for production
         run: |
