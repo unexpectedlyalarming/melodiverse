@@ -19,8 +19,7 @@ jobs:
 
       - name: Run git pull for production
         run: |
-          pwd
-          cd ~/
+          cd /home/ubuntu/melodiverse
           
           git pull origin production
 
