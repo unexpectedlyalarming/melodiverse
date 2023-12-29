@@ -24,5 +24,7 @@ jobs:
 
       - name: Restart PM2
         run: |
-          /home/ubuntu/.nvm/versions/node/v20.7.0/bin/pm2 restart melodiverse-client
-          /home/ubuntu/.nvm/versions/node/v20.7.0/bin/pm2 restart melodiverse-server
+          nvm use v20.7.0
+          npm install pm2 -g
+          pm2 restart melodiverse-client
+          pm2 restart melodiverse-server
