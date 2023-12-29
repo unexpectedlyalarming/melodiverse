@@ -24,6 +24,5 @@ jobs:
 
       - name: Restart PM2
         run: |
-          PATH=$PATH:/home/ubuntu/.nvm/versions/node/v20.7.0/bin
           pm2 restart melodiverse-client
           pm2 restart melodiverse-server
