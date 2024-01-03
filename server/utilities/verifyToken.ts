@@ -4,10 +4,8 @@ import ReturnedUser from "../interfaces/ReturnedUser";
 const jwtKey: string = process.env.JWT_SECRET || "secret";
 import Request from "../interfaces/Request";
 
-
 function verifyToken(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.accessToken;
-
 
   if (!token) {
     return res.status(401).json({ message: "Token is missing" });
@@ -18,17 +16,11 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-
-    // Assuming that your JWT payload structure includes 'user' with 'id' property
     if (!decoded._id) {
       return res.status(401).json({ message: "Invalid token payload" });
     }
 
-
-
     req.user = decoded;
-
-
 
     //If token is about to expire, reissue it
 
@@ -45,7 +37,6 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
       });
     }
 
-    // Token is valid, continue processing the request
     next();
   });
 }
